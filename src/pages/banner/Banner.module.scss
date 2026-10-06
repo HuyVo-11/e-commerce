@@ -1,0 +1,86 @@
+.wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../../assets/mainBanner.svg');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+
+    .container {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: left;
+        max-width: 1270px;
+        padding: 80px 0;
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            max-width: 596px;
+
+            h1 {
+                max-width: 577px;
+                margin: 0;
+                padding: 0;
+            }
+
+            .text {
+                margin-top: 47px;
+            }
+
+            .shopBtn {
+                height: 52px;
+                width: 210px;
+                border-radius: 54px;
+                margin-top: 32px;
+                background-color: var(--btn-color);
+                color: var(--text-light);
+                border: none;
+                outline: none;
+            }
+
+            .qtyWrapper {
+                margin-top: 48px;
+                display: flex;
+
+                .qtyBrands {
+                    margin-right: 32px;
+                }
+
+                .qtyProducts {
+                    padding: 0 32px;
+                    border-right: 1px solid #b9b9b9ce;
+                    border-left: 1px solid #b9b9b9ce;
+                }
+
+                .qtyCustomers {
+                    margin-left: 32px;
+                }
+            }
+        }
+
+    }
+
+    .brandWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--btn-color);
+        height: 122px;
+        width: 100%;
+        color: aliceblue;
+
+        .brands {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 50px;
+        }
+    }
+}
