@@ -1,5 +1,5 @@
 
-import TS1 from '../../assets/TS1.svg'
+import ProductCard from '../../components/productCard/ProductCard';
 import styles from './NewArrivals.module.scss';
 
 const NewArrivals = () => {
@@ -8,23 +8,20 @@ const NewArrivals = () => {
             <div className={styles.header}>
                 <h2>New Arrivals</h2>
             </div>
-            <div className={styles.newArrivalProduct}>
-                <div className={styles.productCard}>
-                    <div className={styles.img}>
-                        <img src={TS1} alt='TS1' />
-                    </div>
-                    <div className={styles.productName}>
-                       
-                    </div>
-                    <div className={styles.rating}>
-                        rate
-                    </div>
-                    <div className={styles.price}>
-                        price
-                    </div>
-                </div>
+
+            <div className={styles.displayCard}>
+            <ProductCard/>
+            <ProductCard/>
+            <ProductCard/>
+            <ProductCard/>
+            </div>
+
+            <div className={styles.btnWrapper}>
+                <button className={styles.btn}>
+                    <p>View All</p>
+                </button>
             </div>
         </div>
     )
 }
-export default NewArrivals;
+export default NewArrivals ;

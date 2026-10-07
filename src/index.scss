@@ -5,6 +5,7 @@
 :root {
     --bg-color: #CFCFCF;
     --text-light: #ffffff;
+    --text-dark: #000000;
     --btn-color: #000000;
 }
 
@@ -19,7 +20,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    // Các thuộc tính chung của heading
+
     h1, h2 ,h3 {
         font-family: 'Archivo Black', sans-serif;
         color: var(--text-dark);
@@ -27,7 +28,6 @@ body {
         font-weight: 700;
     }
 
-    // Kích thước riêng cho từng thẻ
     h1 {
         font-size: 64px;
     }

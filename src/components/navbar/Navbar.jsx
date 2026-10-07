@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 
 import searchIcon from '../../assets/searchIcon.svg';
@@ -9,7 +9,7 @@ const Navbar = () => {
     return (
         <nav className={styles.navContainer}>
             {/* logo */}
-            <div className={styles.logo}>SHOP.CO</div>
+            <Link to="/" className={styles.logo}>SHOP.CO</Link>
 
             {/* nav Links */}
             <ul className={styles.navLinks}>

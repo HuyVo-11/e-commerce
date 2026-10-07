@@ -42,8 +42,11 @@
                 color: var(--text-light);
                 border: none;
                 outline: none;
-            }
 
+                &:active {
+                transform: scale(0.98);
+            }
+        }
             .qtyWrapper {
                 margin-top: 48px;
                 display: flex;

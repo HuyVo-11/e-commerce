@@ -6,12 +6,35 @@
     align-items: center;
     justify-content: center;
 
-    .newArrivalProduct{
+    .header {
+        padding: 40px 0;
+    };
+
+    .displayCard {
         display: flex;
-
-        .productName {
-
-        }
-        
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
     }
+
+    .btnWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .btn {
+            background-color: var(--bg-color);
+            max-width: 100%;
+            width: 218px;
+            height: 52px;
+            border-radius: 52px;
+            border: none;
+            cursor: pointer;
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+    }
+
 }

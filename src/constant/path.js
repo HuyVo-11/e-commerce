@@ -6,12 +6,17 @@ import NewArrivals from '../pages/newArrivals/NewArrivals';
 import Brands from '../pages/brands/Brands';
 import LandingPage from '../pages/landingPage/LandingPage';
 
+// Tất cả các routes của app (dùng trong Router)
+export const routes = [
+    { path: paths.landingPage, component: LandingPage },
+    { path: paths.shop, component: Shop },
+    { path: paths.onSale, component: OnSale },
+    { path: paths.newArrivals, component: NewArrivals },
+    { path: paths.brands, component: Brands },
+]
+
+// Chỉ những link hiển thị trên Navbar (không có Home)
 export const navLinks = [
-    {
-        path: paths.landingPage,
-        component: LandingPage,
-        text: 'Home',
-    },
     {
         path: paths.shop,
         component: Shop,

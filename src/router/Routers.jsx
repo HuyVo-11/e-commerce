@@ -1,14 +1,14 @@
-import { Routes,Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
-import { navLinks } from '../constant/path';
+import { routes } from '../constant/path';
 
 const AppRouter = () => {
     return (
         <Routes>
-            {navLinks.map((item, key) => {
+            {routes.map((item, key) => {
                 const Component = item.component
                 return (
-                    <Route key={key} path={item.path} element={<Component/>} />
+                    <Route key={key} path={item.path} element={<Component />} />
                 )
             })}
         </Routes>
