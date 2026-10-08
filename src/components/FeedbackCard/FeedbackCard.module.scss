@@ -3,10 +3,15 @@
     padding: 28px 32px;
     border-radius: 20px;
     border: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+
 
     .container {
         width: 100%;
 
-
+        .customerName {
+            font-size: 20px;
+            font-weight: bold;
+        }
     }
 }

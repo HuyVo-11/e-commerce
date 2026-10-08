@@ -13,11 +13,11 @@ const ProductCard = ({ product }) => {
                     <p>{product.name}</p>
                 </div>
                 <div className={styles.rating}>
-                    <div className={styles.star}>
+                    <div className='star'>
                         {[1, 2, 3, 4, 5].map(star => (
                             <FaStar
                                 key={star}
-                                color={star <= Math.round(product.rating) ? '#FFD700' : '#ccc'}
+                                color={star <= Math.round(product.rating) ? '#FFC633' : '#ccc'}
                             />
                         ))}
                     </div>
