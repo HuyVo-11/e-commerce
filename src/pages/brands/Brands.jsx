@@ -1,5 +1,3 @@
-import styles from './Brands.module.scss';
-
 const Brands = () => {
     return (
         <div>

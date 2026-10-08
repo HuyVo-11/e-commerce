@@ -1,9 +1,4 @@
-
-import ck from '../../assets/ck.svg';
-import gc from '../../assets/gc.svg';
-import pd from '../../assets/pd.svg';
-import vs from '../../assets/vs.svg';
-import zr from '../../assets/zr.svg';
+import { brands } from '../../constant/path';
 import styles from './Banner.module.scss';
 
 const Banner = () => {
@@ -39,21 +34,11 @@ const Banner = () => {
             </div>
             <div className={styles.brandWrapper}>
                 <div className={styles.brands}>
-                    <div>
-                        <img src={ck} alt='Calvon Klein' />
-                    </div>
-                    <div>
-                        <img src={gc} alt='Gucci' />
-                    </div>
-                    <div>
-                        <img src={pd} alt='Prada' />
-                    </div>
-                    <div>
-                        <img src={vs} alt='Versace' />
-                    </div>
-                    <div>
-                        <img src={zr} alt='Zara' />
-                    </div>
+                   {brands.map(brand => (
+                        <div key={brand.name}>
+                            <img src={brand.image} alt={brand.name}/>
+                        </div>
+                   ))}
                 </div>
             </div>
         </div>

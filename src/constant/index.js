@@ -1,3 +1,4 @@
+// paths
 export const paths = {
     landingPage: '/',
     shop: '/shop',
@@ -5,3 +6,4 @@ export const paths = {
     newArrivals: '/newArrivals',
     brands: '/brands',
 }
+

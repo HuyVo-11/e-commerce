@@ -1,0 +1,63 @@
+.wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 70px 0px;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 1270px;
+        gap: 55px;
+
+        .header {
+                   h2 {
+            font-size: 48px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        }
+
+        .displayCard {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 36px;
+
+            .listItem {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--bg-color);
+                max-width: 100%;
+                border-radius: 52px;
+                border: none;
+                cursor: pointer;
+                font-size: 20px;
+                padding: 15px 10px;
+                width: 218px;
+
+                &:active {
+                    transform: scale(0.98);
+                }
+            }
+        }
+    }
+}

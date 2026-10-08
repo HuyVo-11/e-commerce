@@ -1,25 +1,35 @@
+import { FaStar } from 'react-icons/fa';
 
 import TS1 from '../../assets/TS1.svg'
 import styles from './ProductCard.module.scss';
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
     return (
-        <div className={styles.newArrivalProduct}>
-                <div className={styles.productCard}>
-                    <div className={styles.img}>
-                        <img src={TS1} alt='TS1' />
+            <div className={styles.productCard}>
+                <div className={styles.img}>
+                    <img src={TS1} alt='TS1' />
+                </div>
+                <div className={styles.productName}>
+                    <p>{product.name}</p>
+                </div>
+                <div className={styles.rating}>
+                    <div className={styles.star}>
+                        {[1, 2, 3, 4, 5].map(star => (
+                            <FaStar
+                                key={star}
+                                color={star <= Math.round(product.rating) ? '#FFD700' : '#ccc'}
+                            />
+                        ))}
                     </div>
-                    <div className={styles.productName}>
-                        Name
-                    </div>
-                    <div className={styles.rating}>
-                        rate
-                    </div>
-                    <div className={styles.price}>
-                        price
+                    <div className={styles.numRating}>
+                        <p>{product.rating} /5</p>
                     </div>
                 </div>
+                <div className={styles.price}>
+                    <p>${product.price}</p>
+                </div>
             </div>
+
     )
 }
 

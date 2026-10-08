@@ -76,14 +76,13 @@
         background-color: var(--btn-color);
         height: 122px;
         width: 100%;
-        color: aliceblue;
 
         .brands {
+            max-width: 1270px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 0 50px;
         }
     }
 }

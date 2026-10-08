@@ -4,78 +4,95 @@ Dưới đây là sơ đồ chi tiết về cấu trúc thư mục của dự á
 
 ```text
 e-commerce/
-├── public/                               # Chứa các tài nguyên tĩnh phục vụ trực tiếp cho web (favicon, icon...)
+├── public/                               # Chứa các tài nguyên tĩnh phục vụ trực tiếp cho web
+│   ├── favicon.svg                       # Favicon trang web
+│   └── icons.svg                         # File SVG icons
+│
 ├── src/                                  # Thư mục chứa mã nguồn chính của ứng dụng
-│   ├── assets/                           # Chứa hình ảnh, vector SVG, logo, icon dùng trong dự án
-│   │   ├── hero.png
+│   ├── assets/                           # Chứa hình ảnh, vector SVG, logo các thương hiệu
+│   │   ├── hero.png                      # Hình ảnh người mẫu Hero Banner
 │   │   ├── mainBanner.svg                # Ảnh nền/banner chính
-│   │   ├── react.svg
 │   │   ├── searchIcon.svg                # Icon tìm kiếm
-│   │   └── vite.svg
+│   │   ├── TS1.svg                       # Ảnh sản phẩm mẫu (T-shirt)
+│   │   ├── ck.svg                        # Logo thương hiệu Calvin Klein
+│   │   ├── gc.svg                        # Logo thương hiệu Gucci
+│   │   ├── pd.svg                        # Logo thương hiệu Prada
+│   │   ├── vs.svg                        # Logo thương hiệu Versace
+│   │   └── zr.svg                        # Logo thương hiệu Zara
 │   │
 │   ├── components/                       # Chứa các component dùng chung hoặc theo khối UI
-│   │   ├── layout/                       # Các component định hình khung sườn layout
+│   │   ├── Layout/                       # Các component định hình khung sườn layout
 │   │   │   ├── RootLayout.jsx            # Layout gốc (bọc <header>, <main> và <footer>)
 │   │   │   ├── RootLayout.module.scss    # Style cho RootLayout
 │   │   │   ├── HeaderLayout.jsx          # Component Header bọc Navbar
 │   │   │   ├── HeaderLayout.module.scss  # Style cho HeaderLayout
-│   │   │   └── Footer.jsx                # Component Footer
-│   │   └── navbar/                       # Component thanh điều hướng (Navigation Bar)
-│   │       ├── Navbar.jsx                # Thanh menu chính (Logo, NavLinks, SearchBar, User/Cart Icons)
-│   │       └── Navbar.module.scss        # Style cho Navbar
+│   │   │   └── Footer.jsx                # Component Footer chân trang
+│   │   ├── Navbar/                       # Component thanh điều hướng (Navigation Bar)
+│   │   │   ├── Navbar.jsx                # Thanh menu chính (Logo, NavLinks, SearchBar, User/Cart Icons)
+│   │   │   └── Navbar.module.scss        # Style cho Navbar
+│   │   └── ProductCard/                  # Component thẻ sản phẩm (Product Card)
+│   │       ├── ProductCard.jsx           # Hiển thị ảnh, tên sản phẩm, đánh giá sao (FaStar) và giá tiền
+│   │       └── ProductCard.module.scss   # Style cho ProductCard (kích thước, hover, bố cục)
 │   │
-│   ├── pages/                            # Các trang (views) của ứng dụng tương ứng với các route
-│   │   ├── home/                         # Trang chủ (Route '/')
-│   │   │   └── Home.jsx                  # Trang chủ kết hợp các section (Banner, danh mục...)
-│   │   ├── banner/                       # Section Banner (Hero Section)
-│   │   │   ├── Banner.jsx
-│   │   │   └── Banner.module.scss
+│   ├── pages/                            # Các trang và sections của ứng dụng
+│   │   ├── landingPage/                  # Trang đích chính (Route '/')
+│   │   │   └── LandingPage.jsx           # Kết hợp Banner và NewArrivals
+│   │   ├── banner/                       # Section Banner chính (Hero section & Brand logos)
+│   │   │   ├── Banner.jsx                # Nội dung banner chào mừng, nút Shop Now và dải logo thương hiệu
+│   │   │   └── Banner.module.scss        # Style cho Banner
+│   │   ├── newArrivals/                  # Section / Trang hàng mới về (Route '/newArrivals')
+│   │   │   ├── NewArrivals.jsx           # Lọc sản phẩm mới (tag: 'new'), render ProductCard, toggle "View All" / "Reset"
+│   │   │   └── NewArrivals.module.scss   # Style bố cục lưới 4 cột / hàng, responsive cho NewArrivals
 │   │   ├── shop/                         # Trang cửa hàng (Route '/shop')
-│   │   │   ├── Shop.jsx
-│   │   │   └── Shop.module.scss
+│   │   │   ├── Shop.jsx                  # Giao diện trang Shop
+│   │   │   └── Shop.module.scss          # Style cho trang Shop
 │   │   ├── onSale/                       # Trang khuyến mãi (Route '/onSale')
-│   │   │   ├── OnSale.jsx
-│   │   │   └── OnSale.module.scss
-│   │   ├── newArrivals/                  # Trang hàng mới về (Route '/newArrivals')
-│   │   │   ├── NewArrivals.jsx
-│   │   │   └── NewArrivals.module.scss
+│   │   │   ├── OnSale.jsx                # Giao diện trang OnSale
+│   │   │   └── OnSale.module.scss        # Style cho trang OnSale
 │   │   └── brands/                       # Trang thương hiệu (Route '/brands')
-│   │       ├── Brands.jsx
-│   │       └── Brands.module.scss
+│   │       ├── Brands.jsx                # Giao diện trang Brands
+│   │       └── Brands.module.scss        # Style cho trang Brands
 │   │
-│   ├── constant/                         # Chứa các hằng số, cấu hình đường dẫn (paths)
-│   │   ├── index.js                      # Định nghĩa danh sách path tĩnh (paths: home, shop, ...)
-│   │   └── path.js                       # Cấu hình danh sách navLinks (path, component, label)
+│   ├── constant/                         # Chứa các hằng số, cấu hình đường dẫn và mock data
+│   │   ├── index.js                      # Khai báo object paths định danh các routes ('/', '/shop', ...)
+│   │   ├── path.js                       # Cấu hình danh sách routes (cho Router) và navLinks (cho Navbar)
+│   │   └── productData.js                # Danh sách dữ liệu mẫu các sản phẩm (id, name, price, rating, tag...)
 │   │
-│   ├── router/                           # Cấu hình routing cho ứng dụng
-│   │   └── Routers.jsx                   # Quản lý <Routes> và lặp qua các <Route> từ path.js
+│   ├── router/                           # Cấu hình định tuyến (Routing)
+│   │   └── Routers.jsx                   # Quản lý <Routes> và lặp qua các <Route> cấu hình từ path.js
 │   │
-│   ├── App.css                           # Style chung của App
-│   ├── App.jsx                           # Component gốc của ứng dụng (bọc RootLayout và AppRouter)
-│   ├── index.css                         # CSS toàn cục (CSS Reset, variables...)
-│   └── main.jsx                          # Điểm khởi chạy của React (ReactDOM.createRoot, bọc BrowserRouter)
+│   ├── App.css                           # Style dùng chung cho App
+│   ├── App.jsx                           # Component gốc (kết hợp RootLayout và AppRouter)
+│   ├── index.scss                        # SCSS toàn cục (CSS Reset, biến màu sắc, font chữ chung)
+│   └── main.jsx                          # Điểm khởi chạy React (createRoot, StrictMode, BrowserRouter)
 │
 ├── .gitignore                            # Cấu hình bỏ qua các file khi commit git
-├── eslint.config.js                      # Cấu hình linting ESLint
+├── eslint.config.js                      # Cấu hình kiểm tra cú pháp mã nguồn với ESLint
 ├── index.html                            # File HTML gốc nạp ứng dụng React
-├── package.json                          # Khai báo dependencies và scripts (dev, build...)
+├── package.json                          # Khai báo dependencies (react, react-router-dom, react-icons, classnames, sass...) và scripts
 ├── package-lock.json                     # Khóa phiên bản chi tiết các package dependencies
 ├── srcTree.md                            # Tài liệu mô tả cây thư mục dự án
-└── vite.config.js                        # Cấu hình Vite bundler và plugins
+└── vite.config.js                        # Cấu hình Vite bundler và plugin React
 ```
 
 ---
 
 ## 🎯 Luồng hoạt động chính (Data & Component Flow)
 
-1. **`main.jsx`**: Nạp `BrowserRouter` và render `<App />`.
+1. **`main.jsx`**: Nạp `BrowserRouter`, import `index.scss` và render `<App />`.
 2. **`App.jsx`**: Gọi `<RootLayout>` và truyền `<AppRouter />` làm `children`.
 3. **`RootLayout.jsx`**:
-   - Hiển thị `<header>` chứa `<HeaderLayout />` $\rightarrow$ `<Navbar />`.
+   - Hiển thị `<HeaderLayout />` $\rightarrow$ `<Navbar />` (đọc menu từ `navLinks` trong `src/constant/path.js`).
    - Hiển thị `<main>` chứa nội dung động do `<AppRouter />` quyết định dựa trên URL hiện tại.
-4. **`Routers.jsx`**: Đọc danh sách cấu hình từ `src/constant/path.js` để render trang tương ứng:
-   - `/` $\rightarrow$ `Home` (hiển thị `Banner`)
+   - Hiển thị `<Footer />`.
+4. **`Routers.jsx`**: Đọc danh sách cấu hình `routes` từ `src/constant/path.js` để render component tương ứng:
+   - `/` $\rightarrow$ `LandingPage` (gồm component `Banner` và `NewArrivals`).
    - `/shop` $\rightarrow$ `Shop`
    - `/onSale` $\rightarrow$ `OnSale`
    - `/newArrivals` $\rightarrow$ `NewArrivals`
    - `/brands` $\rightarrow$ `Brands`
+5. **Dữ liệu sản phẩm & Component `NewArrivals`**:
+   - Lấy mảng dữ liệu `products` từ `src/constant/productData.js`.
+   - Lọc các sản phẩm có tag `'new'` (`product.tag.includes('new')`).
+   - Sử dụng state `visibleCount` để điều khiển số lượng sản phẩm hiển thị (mặc định 8 sản phẩm, bấm **View All** để hiển thị tất cả, bấm **Reset** để quay về 8 sản phẩm).
+   - Render danh sách thông qua component tái sử dụng `<ProductCard />`.
