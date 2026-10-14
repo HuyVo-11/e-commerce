@@ -6,8 +6,8 @@ const NewArrivals = () => {
     return (
         <div className={styles.wrapper}>
             <ProducSection
-                title = "NEW ARRIVALS"
-                tag = "new"
+                title="NEW ARRIVALS"
+                tag="new"
             />
         </div>
     )

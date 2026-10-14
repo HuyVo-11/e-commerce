@@ -1,8 +1,8 @@
 import { NavLink, Link } from 'react-router-dom';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 
-import searchIcon from '../../assets/searchIcon.svg';
-import { navLinks } from '../../constant/path';
+import searchIcon from '../../../../assets/searchIcon.svg';
+import { navLinks } from '../../../../constant/path';
 import styles from './Navbar.module.scss'
 
 const Navbar = () => {

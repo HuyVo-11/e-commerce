@@ -1,5 +1,6 @@
 
-import HeaderLayout from './HeaderLayout';
+import FooterLayout from './Footer/FooterLayout'
+import HeaderLayout from './Header/HeaderLayout';
 import styles from './RootLayout.module.scss';
 
 const RootLayout = ({children}) => {
@@ -11,7 +12,9 @@ const RootLayout = ({children}) => {
             <main className={styles.mainContent}>
                 {children}
             </main>
-            {/* <footer><FooterLayout /></footer> */}
+            <footer>
+                <FooterLayout/>
+            </footer>
         </div>
     );
 }

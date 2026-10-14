@@ -1,0 +1,18 @@
+.headerContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 24px 100px;
+    height: 134px;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 24px;
+        left: 100px;
+        right: 100px;
+        height: 1px;
+        border-bottom: 1px solid #0000001A;
+    }
+}

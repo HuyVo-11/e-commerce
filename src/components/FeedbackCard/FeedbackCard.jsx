@@ -4,7 +4,7 @@ import styles from './FeedbackCard.module.scss';
 
 const FeedbackCard = ({ feedbacks }) => {
     return (
-        <div className={styles.wrapper}>
+        <div className={styles.wrapper} data-review-card>
             <div className={styles.container}>
                 <div className='star'>
                     {[1, 2, 3, 4, 5].map(star => (

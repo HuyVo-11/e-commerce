@@ -1,11 +1,10 @@
-import Navbar from "../navbar/navbar";
-
+import Navbar from './Navbar/Navbar'
 import styles from './HeaderLayout.module.scss';
 
 const HeaderLayout = () => {
     return (
         <div className={styles.headerContainer}>
-            <Navbar/>
+                <Navbar />
         </div>
     )
 }

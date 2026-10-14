@@ -1,4 +1,4 @@
-export const feedbacks = [
+export const listFeedback = [
     {
         id: 'FB001',
         name: 'Sarah M.',

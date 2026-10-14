@@ -1,0 +1,23 @@
+.wrapper {
+    width: 100%;
+    height: auto;
+    padding: 0 100px;
+
+    .breadcrumb{
+        display: flex;
+        gap: 10px
+    }
+
+    .mainContainer{
+        width: 100%;
+        padding: 24px 0;
+        display: flex;
+        flex-direction: row;
+
+        .filterSidebar{
+            border-radius: 20px;
+            padding: 20px 24px;
+            border: 1px solid #0000001A;;
+        }
+    }
+}
