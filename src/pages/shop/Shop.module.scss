@@ -1,23 +1,96 @@
 .wrapper {
     width: 100%;
     height: auto;
-    padding: 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .breadcrumb{
-        display: flex;
-        gap: 10px
-    }
+    .container {
+        max-width: 1240px;
+        .breadcrumb {
+            display: flex;
+            gap: 10px;
 
-    .mainContainer{
-        width: 100%;
-        padding: 24px 0;
-        display: flex;
-        flex-direction: row;
+        @media (max-width: 1024px) {
+            gap: 5px;
+            }
 
-        .filterSidebar{
-            border-radius: 20px;
-            padding: 20px 24px;
-            border: 1px solid #0000001A;;
+        }
+
+        .mainContainer {
+
+            padding: 24px 0;
+            display: flex;
+            flex-direction: row;
+
+
+            .filterSidebar {
+                border-radius: 20px;
+                padding: 20px 24px;
+                border: 1px solid #0000001A;
+
+                .filterHeader {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-bottom: 12px;
+                    border-bottom: 1px solid #0000001A;
+
+                }
+
+                .categoryList {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 12px;
+                    gap: 20px;
+                    border-bottom: 1px solid #0000001A;
+
+                    .categoryItem {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+
+                .filterSection {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 24px 0;
+                    border-bottom: 1px solid #0000001A;
+
+                    .sectionHeader {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                }
+            }
+
+            .productContent {
+                display: flex;
+                padding: 0 20px;
+                flex-direction: column;
+
+                .contentHeader {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                }
+
+                .sortWrapper {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+
+                    .sortBy {
+                        display: flex;
+                        gap: 5px;
+                    }
+                }
+            }
         }
     }
+
 }

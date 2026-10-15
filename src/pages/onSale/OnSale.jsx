@@ -1,4 +1,3 @@
-import styles from './OnSale.module.scss';
 
 const OnSale = () =>{
     return (
