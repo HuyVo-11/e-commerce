@@ -1,16 +1,26 @@
-.wrapper {
-    height: auto;
-    background: #F0F0F0;
+.footerWrapper {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    position: relative;
-    padding-top: 140px;
-    margin-top: 90px;
+    justify-content: center;
+    padding: 100px 0 0 0;
 
-    .subscriptionContainer {
-        position: absolute;
-        top: -80px;
+    .footerContainer {
+        width: 100%;
+        min-height: 300px;
+        max-width: 1640px;
+        background: #F0F0F0;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 80px;
+        position: relative;
+
+        .subscriptionContainer {
+            position: absolute;
+            top: -80px;
+        }
     }
 }

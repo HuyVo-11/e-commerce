@@ -5,13 +5,12 @@ import { listFeedback } from '../../constant/feedbackData';
 import useHorizontalScroll from '../../hook/useHorizontalScroll';
 
 const Feedback = () => {
-    const {handleScroll, listRef, scroll, cloneData} = useHorizontalScroll('[data-review-card]', listFeedback)
+    const { handleScroll, listRef, scroll, cloneData } = useHorizontalScroll('[data-review-card]', listFeedback)
 
     return (
-        <div className={styles.wrapper}>
-
-            <div className={styles.headerWrapper}>
-                <div className={styles.header}>
+        <div className={styles.feedbackWrapper}>
+            <div className={styles.feedbackContainer}>
+                <div className={styles.feedbackHeader}>
                     <h2>
                         OUR HAPPY CUSTOMERS
                     </h2>
@@ -24,16 +23,17 @@ const Feedback = () => {
                         </button>
                     </div>
                 </div>
+
+                <div className={styles.feedbackList} ref={listRef} onScroll={handleScroll}>
+                    {cloneData.map(item => (
+                        <FeedbackCard
+                            key={item._cloneKey || item.id}
+                            feedbacks={item}
+                        />
+                    ))}
+                </div>
             </div>
 
-            <div className={styles.list} ref={listRef} onScroll={handleScroll}>
-                {cloneData.map(item => (
-                    <FeedbackCard
-                        key={item._cloneKey || item.id}
-                        feedbacks={item}
-                    />
-                ))}
-            </div>
         </div>
 
     )

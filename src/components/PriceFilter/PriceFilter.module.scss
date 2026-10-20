@@ -1,32 +1,48 @@
-.wrapper {
+.priceFillterWrapper {
     display: flex;
     flex-direction: column;
 
-    .priceHeader {
+    .priceFillterHeader {
         display: flex;
         justify-content: space-between;
 
-        .btn {
+        .priceFillterBtn {
             border: none;
             background-color: white;
         }
     }
 
-    .customSlider {
-        color: black;
+    .priceSlection {
+        height: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        :global(.MuiSlider-valueLabel) {
-            top: 50px;
-            background-color: transparent;
+        transition: height 0.3s ease, margin-top 0.3s ease;
+
+        &.open {
+            margin-top: 16px;
+            height: 80px;
+        }
+
+        .customSlider {
+
             color: black;
-            font-weight: 600;
-            font-size: 14px;
+            width: 80%;
 
-            &::before {
-                display: none;
+            :global(.MuiSlider-valueLabel) {
+                top: 50px;
+                background-color: transparent;
+                color: black;
+                font-weight: 600;
+                font-size: 14px;
+
+                &::before {
+                    display: none;
+                }
             }
         }
+
     }
-
-
 }

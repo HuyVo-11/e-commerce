@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 const ColorFilter = () => {
     const [isOpen, setIsOpen] = useState(true);
+
     const [selectedColor, setSelectedColor] = useState(null);
 
     const handleSelectColor = (id) => {
@@ -13,11 +14,11 @@ const ColorFilter = () => {
     };
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.colorHeader}>
+        <div className={styles.colorFillterWrapper}>
+            <div className={styles.colorFillterHeader}>
                 <h5>Color</h5>
                 <button
-                    className={styles.btn}
+                    className={styles.colorFillterBtn}
                     onClick={() => setIsOpen((prev) => !prev)}
                 >
                     {isOpen ? <ChevronUp /> : <ChevronDown />}

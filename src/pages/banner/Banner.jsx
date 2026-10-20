@@ -3,13 +3,13 @@ import styles from './Banner.module.scss';
 
 const Banner = () => {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
-                <div className={styles.content}>
+        <div className={styles.bannerWrapper}>
+            <div className={styles.bannerContainer}>
+                <div className={styles.bannerContent}>
                     <h1>
                         <b>FIND CLOTHES THAT MATCHES YOUR STYLE</b>
                     </h1>
-                    <div className={styles.text}>
+                    <div className={styles.bannerText}>
                         <p>Browse through our diverse range of meticulously
                             crafted garments, designed to bring out your individuality
                             and cater to your sense of style.

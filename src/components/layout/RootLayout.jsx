@@ -11,11 +11,11 @@ const RootLayout = ({children}) => {
             <header>
                 <HeaderLayout />
             </header>
-            <Breadcrumb/>
             <main className={styles.mainContent}>
+                <Breadcrumb/>
+                <Outlet/>
                 {children}
             </main>
-            <Outlet/>
             <footer>
                 <FooterLayout/>
             </footer>

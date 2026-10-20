@@ -5,9 +5,9 @@ import styles from './DressStyle.module.scss'
 
 const DressStyle = () => {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
-                <div className={styles.header}>
+        <div className={styles.dressStyleWrapper}>
+            <div className={styles.dressStyleContainer}>
+                <div className={styles.dressStyleHeader}>
                     <h2>BROWSE BY DRESS STYLE</h2>
                 </div>
 

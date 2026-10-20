@@ -1,11 +1,10 @@
 import { useState } from 'react';
-
-import ProductCard from '../ProductCard/ProductCard.jsx';
-import styles from './ProductSection.module.scss';
-import { products } from '../../constant/productData.js'
 import classNames from 'classnames';
 
-const defaultProduct = 4
+import ProductCard from '../ProductCard/ProductCard.jsx';
+import { products } from '../../constant/productData.js'
+import styles from './ProductSection.module.scss';
+
 const CustomButton = ({
     onClick,
     title,
@@ -19,7 +18,12 @@ const CustomButton = ({
         </button>
     )
 }
-const ProductSection = ({ title, tag }) => {
+
+const ProductSection = ({
+    title,
+    tag,
+    defaultProduct = 4,
+}) => {
     const [visibleCount, setVisibleCount] = useState(defaultProduct);
     const [activeViewAll, setActiveViewAll] = useState(false);
 
@@ -36,7 +40,6 @@ const ProductSection = ({ title, tag }) => {
         />
     ))
 
-
     const handleOnClickView = (status) => {
         setActiveViewAll(pre => !pre)
 
@@ -48,11 +51,13 @@ const ProductSection = ({ title, tag }) => {
     }
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h2>{title}</h2>
-                </div>
+        <div className={styles.productSectionWrapper}>
+            <div className={styles.productSectionContainer}>
+                {title && (
+                    <div className={styles.productSectionHeader}>
+                        <h2>{title}</h2>
+                    </div>
+                )}
                 <div className={styles.displayCard}>
                     <div className={classNames(styles.listItem, {
                         [styles.viewAll]: activeViewAll

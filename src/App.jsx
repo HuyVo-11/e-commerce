@@ -1,6 +1,6 @@
 import './App.css'
+import RootLayout from './components/Layout/RootLayout'
 
-import RootLayout from './components/layout/RootLayout'
 import AppRouter from './router/routers'
 
 function App() {

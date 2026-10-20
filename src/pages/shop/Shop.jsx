@@ -7,8 +7,8 @@ import ColorFilter from '../../components/ColorFilter/ColorFilter';
 
 const Shop = () => {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
+        <div className={styles.shopWrapper}>
+            <div className={styles.shopContainer}>
                 {/* Breadcrumb */}
 
 
@@ -140,17 +140,17 @@ const Shop = () => {
 
                         {/* Phân trang (Pagination) */}
                         <div className={styles.pagination}>
-                            <div className={styles.prevBtn}>&larr; Previous</div>
+                            <button className={styles.btn}>&larr; Previous</button>
                             <div className={styles.pageNumbers}>
-                                <div className={styles.pageItem}>1</div>
-                                <div className={styles.pageItem}>2</div>
-                                <div className={styles.pageItem}>3</div>
-                                <div className={styles.pageDots}>...</div>
-                                <div className={styles.pageItem}>8</div>
-                                <div className={styles.pageItem}>9</div>
-                                <div className={styles.pageItem}>10</div>
+                                <button className={styles.pageBtn}>1</button>
+                                <button className={styles.pageBtn}>2</button>
+                                <button className={styles.pageBtn}>3</button>
+                                <button className={styles.pageBtn}>...</button>
+                                <button className={styles.pageBtn}>8</button>
+                                <button className={styles.pageBtn}>9</button>
+                                <button className={styles.pageBtn}>10</button>
                             </div>
-                            <div className={styles.nextBtn}>Next &rarr;</div>
+                            <button className={styles.btn}>Next &rarr;</button>
                         </div>
                     </div>
                 </div>

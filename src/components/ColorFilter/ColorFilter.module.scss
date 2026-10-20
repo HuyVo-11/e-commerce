@@ -1,14 +1,14 @@
-.wrapper {
+.colorFillterWrapper {
     display: flex;
     flex-direction: column;
     overflow: hidden;
 
-    .colorHeader {
+    .colorFillterHeader {
         display: flex;
         justify-content: space-between;
         align-items: center;
 
-        .btn {
+        .colorFillterBtn {
             border: none;
             background-color: transparent;
             cursor: pointer;
@@ -23,6 +23,8 @@
         grid-template-columns: repeat(5, 1fr);
         gap: 14px;
         height: 0;
+        transition: height 0.3s ease, margin-top 0.3s ease;
+
 
         &.open {
             margin-top: 16px;

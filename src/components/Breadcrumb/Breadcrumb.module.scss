@@ -1,5 +1,18 @@
-.breadcrumb {
-    max-width: 80%;
-    display: flex;
+.breadcrumbWrapper {
+    width: 100%;
+    max-width: 1240px;
     align-items: center;
+    display: flex;
+    margin: 0 auto; // tự căn vô giữa của phần tử cha
+    margin-top: 20px;
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+
+        .breadcrumbItem {
+            display: flex;
+            align-items: center;
+
+        }
+    }
 }

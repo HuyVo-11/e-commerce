@@ -1,24 +1,24 @@
-.wrapper {
+.bannerWrapper {
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-image: url('../../assets/mainBanner.svg');
     background-repeat: no-repeat;
     background-position: top center;
     background-size: cover;
+    gap: 20px;
 
-    .container {
-        position: relative;
+    .bannerContainer {
         width: 100%;
         display: flex;
         justify-content: left;
-        max-width: 1270px;
-        padding: 80px 0;
+        max-width: 1240px;
+        padding: 50px 0;
 
-        .content {
+        .bannerContent {
             display: flex;
             flex-direction: column;
             max-width: 596px;
@@ -27,10 +27,6 @@
                 max-width: 577px;
                 margin: 0;
                 padding: 0;
-            }
-
-            .text {
-                margin-top: 47px;
             }
 
             .shopBtn {
@@ -44,9 +40,10 @@
                 outline: none;
 
                 &:active {
-                transform: scale(0.98);
+                    transform: scale(0.98);
+                }
             }
-        }
+
             .qtyWrapper {
                 margin-top: 48px;
                 display: flex;
@@ -66,7 +63,6 @@
                 }
             }
         }
-
     }
 
     .brandWrapper {
@@ -76,6 +72,7 @@
         background-color: var(--btn-color);
         height: 122px;
         width: 100%;
+        max-width: 1640px;
 
         .brands {
             max-width: 1270px;

@@ -3,10 +3,11 @@ import styles from './TopSelling.module.scss';
 
 const TopSelling = () => {
     return (
-        <div className={styles.wrapper}>
+        <div className={styles.topSellingWrapper}>
             <ProducSection
                 title = "TOP SELLING"
                 tag = "popular"
+                padding
             />
         </div>
     )
