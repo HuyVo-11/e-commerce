@@ -5,9 +5,8 @@ const TopSelling = () => {
     return (
         <div className={styles.topSellingWrapper}>
             <ProducSection
-                title = "TOP SELLING"
-                tag = "popular"
-                padding
+                title="TOP SELLING"
+                tag="popular"
             />
         </div>
     )

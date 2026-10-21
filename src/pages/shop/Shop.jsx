@@ -1,10 +1,9 @@
 import { FaSliders } from 'react-icons/fa6';
 
-import ProductSection from '../../components/ProductSection/ProductSection';
 import styles from './Shop.module.scss';
 import PriceFilter from '../../components/PriceFilter/PriceFilter';
 import ColorFilter from '../../components/ColorFilter/ColorFilter';
-import Pagination from '../../components/Pagination/Pagination';
+import ProductList from '../../components/ProcductList/ProductList';
 
 const Shop = () => {
     return (
@@ -129,19 +128,8 @@ const Shop = () => {
                             </div>
                         </div>
 
-                        {/* Lưới sản phẩm */}
-                        <div className={styles.productGrid}>
-                            <ProductSection
-                                // title="NEW ARRIVALS"
-                                tag="new"
-                            />
-                        </div>
-
-                        <div className={styles.divider} />
-
-                        {/* Phân trang (Pagination) */}
-                        <div className={styles.paginationWrapper}>
-                            <Pagination/>
+                        <div className={styles.ProductList}>
+                            <ProductList/>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import classNames from 'classnames';
+import { useMemo, useState } from 'react';
 
 import ProductCard from '../ProductCard/ProductCard.jsx';
 import { products } from '../../constant/masterData';
@@ -11,7 +10,9 @@ const CustomButton = ({
     className,
 }) => {
     return (
-        <button className={className}
+        <button
+            type='button'
+            className={className}
             onClick={onClick}
         >
             {title}
@@ -23,31 +24,50 @@ const ProductSection = ({
     title,
     tag,
     defaultProduct = 4,
+    step = 4,
 }) => {
     const [visibleCount, setVisibleCount] = useState(defaultProduct);
-    const [activeViewAll, setActiveViewAll] = useState(false);
 
-    const newProducts = products.filter(product =>
-        product.tag?.includes(tag)
-    )
+    // Chỉ lọc lại khi tag thay đổi, không lọc lại mỗi lần bấm nút
+    const filteredProducts = useMemo(
+        () => products.filter(product => product.tag?.includes(tag)),
+        [tag]
+    );
 
-    const visibleList = newProducts.slice(0, visibleCount)
+    const visibleList = filteredProducts.slice(0, visibleCount);
+    const hasMore = visibleCount < filteredProducts.length;
+    const canCollapse = filteredProducts.length > defaultProduct;
 
-    const listProducts = visibleList.map(product => (
-        <ProductCard
-            key={product.id}
-            product={product}
-        />
-    ))
+    const handleShowMore = () => {
+        setVisibleCount(count => Math.min(count + step, filteredProducts.length));
+    }
 
-    const handleOnClickView = (status) => {
-        setActiveViewAll(pre => !pre)
+    const handleShowLess = () => {
+        setVisibleCount(defaultProduct);
+    }
 
-        if (status === 'All') {
-            setVisibleCount(pre => pre + 4)
-        } else {
-            setVisibleCount(defaultProduct)
+    const renderAction = () => {
+        if (hasMore) {
+            return (
+                <CustomButton
+                    className={styles.btn}
+                    title='SHOW MORE'
+                    onClick={handleShowMore}
+                />
+            )
         }
+
+        if (canCollapse) {
+            return (
+                <CustomButton
+                    className={styles.btn}
+                    title='SHOW LESS'
+                    onClick={handleShowLess}
+                />
+            )
+        }
+
+        return null;
     }
 
     return (
@@ -59,24 +79,15 @@ const ProductSection = ({
                     </div>
                 )}
                 <div className={styles.displayCard}>
-                    <div className={classNames(styles.listItem, {
-                        [styles.viewAll]: activeViewAll
-                    })}>
-                        {listProducts}
+                    <div className={styles.listItem}>
+                        {visibleList.map(product => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                            />
+                        ))}
                     </div>
-                    {visibleCount < 8 ? (
-                        <CustomButton
-                            className={styles.btn}
-                            title='SHOW MORE'
-                            onClick={() => handleOnClickView('All')}
-                        />
-                    ) : (
-                        <CustomButton
-                            className={styles.btn}
-                            title='VIEW ALL'
-                            onClick={() => handleOnClickView()}
-                        />
-                    )}
+                    {renderAction()}
                 </div>
             </div>
         </div>

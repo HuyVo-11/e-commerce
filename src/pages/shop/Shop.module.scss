@@ -6,6 +6,7 @@
     justify-content: center;
 
     .shopContainer {
+        width: 100%;
         max-width: 1240px;
 
         .breadcrumb {
@@ -24,6 +25,8 @@
             gap: 20px;
 
             .filterSidebar {
+                flex: 0 0 auto;
+                align-self: flex-start;
                 border-radius: 20px;
                 padding: 20px 24px;
                 border: 1px solid #0000001A;
@@ -64,6 +67,8 @@
             }
 
             .productContent {
+                flex: 1 1 0;
+                min-width: 0;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;

@@ -8,7 +8,6 @@ const NewArrivals = () => {
             <ProducSection
                 title="NEW ARRIVALS"
                 tag="new"
-                padding
             />
         </div>
     )

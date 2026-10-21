@@ -15,6 +15,11 @@
     box-sizing: border-box;
 }
 
+/* Luôn chừa chỗ cho scrollbar dọc để bề rộng layout không đổi giữa các trang */
+html {
+    scrollbar-gutter: stable;
+}
+
 .star {
     color: #FFC633;
     display: flex;

@@ -34,7 +34,7 @@ const PriceFilter = () => {
             })}>
                 <Slider
                     className={styles.customSlider}
-                    getAriaLable={() => 'price range'}
+                    getAriaLabel={() => 'price range'}
                     value={value}
                     onChange={handleOnChange}
                     valueLabelDisplay='on'
