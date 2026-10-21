@@ -31,7 +31,7 @@ e-commerce/
 │   │   │   │       └── Subscription/Subscription.{jsx,module.scss}
 │   │   │   ├── ProductCard/                 # Thẻ sản phẩm (ảnh, tên, sao, giá)
 │   │   │   ├── ProductSection/              # Section lọc theo tag + SHOW MORE / SHOW LESS
-│   │   │   ├── ProductList/                 # Lưới sản phẩm 3 cột + phân trang thu gọn 7 nút (đang gọi dummyjson)
+│   │   │   ├── ProductList/                 # Lưới sản phẩm 3 cột + phân trang (đã nối API Backend localhost:4000)
 │   │   │   ├── FeedbackCard/                # Thẻ đánh giá khách hàng
 │   │   │   ├── ColorFilter/                 # Bộ lọc màu (state cục bộ)
 │   │   │   ├── PriceFilter/                 # Bộ lọc giá (MUI Slider, state cục bộ)
@@ -70,9 +70,11 @@ e-commerce/
 │   └── package-lock.json
 │
 ├── server/                                  # BACKEND: Node.js + Express
+│   ├── public/                              # File tĩnh phục vụ trực tiếp
+│   │   └── upload/                          # Ảnh sản phẩm (P001.jpg -> P010.jpg)
 │   ├── src/
 │   │   ├── config/env.js                    # Đọc & validate PORT, CORS_ORIGIN, DB_PATH
-│   │   ├── routes/index.js                  # Router /api/v1 (hiện có GET /health)
+│   │   ├── routes/index.js                  # Router /api/v1 (GET /health, GET /products)
 │   │   ├── middlewares/
 │   │   │   ├── notFound.js                  # 404 -> ApiError
 │   │   │   └── errorHandler.js              # Mọi lỗi -> { error: { code, message } }
@@ -83,10 +85,10 @@ e-commerce/
 │   │   │   ├── database.js                  # Mở SQLite (WAL, foreign_keys ON)
 │   │   │   ├── migrate.js                   # Runner migration + bảng _migrations
 │   │   │   ├── migrations/001_init.sql       # Schema catalog
-│   │   │   ├── seed.js                      # Seed idempotent (products/tags/variants)
-│   │   │   ├── seedData.js                  # 30 sản phẩm + 10 màu (sinh từ masterData)
+│   │   │   ├── seed.js                      # Seed idempotent (products/images/tags/variants)
+│   │   │   ├── seedData.js                  # 80 sản phẩm + 10 màu
 │   │   │   └── reset.js                     # Xóa DB -> migrate -> seed
-│   │   ├── app.js                           # CORS, JSON, mount /api/v1, 404, error
+│   │   ├── app.js                           # CORS, static /upload, mount /api/v1, 404, error
 │   │   └── server.js                        # listen + graceful shutdown
 │   ├── data/
 │   │   ├── .gitkeep
@@ -122,7 +124,7 @@ e-commerce/
 **Dữ liệu hiện tại**
 
 - Home/NewArrivals/TopSelling: đọc `products` từ `constant/masterData.js` → `ProductSection` lọc theo `tag`, phân trang bằng state `visibleCount` (mặc định 4, mỗi lần +4, có SHOW LESS).
-- Shop: `ProductList` gọi trực tiếp `https://dummyjson.com/products` (12 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`).
+- Shop: `ProductList` gọi trực tiếp API Backend `http://localhost:4000/api/v1/products` (9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`). Ảnh sản phẩm tải trực tiếp từ Backend (`http://localhost:4000/upload/...`), fallback về `TS1.svg`.
 - Filter màu/giá trong `Shop` đang giữ **state cục bộ**, chưa nối vào danh sách sản phẩm.
 - Ảnh trong `ProductCard` đang hardcode `TS1.svg`, chưa dùng `product.image`.
 
@@ -135,10 +137,12 @@ server.js
   └─ app.js
        ├─ cors (CORS_ORIGIN)
        ├─ express.json()
+       ├─ /upload → express.static('public/upload')  (phục vụ ảnh sản phẩm)
        ├─ /api/v1 → routes/index.js
-       │     └─ GET /health  → { status, uptime, timestamp }
-       ├─ notFound        → 404 { error: { code: "ROUTE_NOT_FOUND", ... } }
-       └─ errorHandler    → 500/4xx cùng format JSON
+       │     ├─ GET /health    → { status, uptime, timestamp }
+       │     └─ GET /products  → { products, meta, skip } (phân trang limit/skip, kèm thumbnail)
+       ├─ notFound             → 404 { error: { code: "ROUTE_NOT_FOUND", ... } }
+       └─ errorHandler         → 500/4xx cùng format JSON
 ```
 
 **Database**
@@ -156,7 +160,7 @@ server.js
 | `brands` | `id, slug, name, logo_url` | Thương hiệu |
 | `products` | `id (TEXT), slug, name, description, category_id, brand_id, price, rating, created_at` | Sản phẩm |
 | `product_tags` | `product_id, tag` (PK kép) | `new`, `popular`, … |
-| `product_images` | `id, product_id, url, alt, position` | Ảnh sản phẩm (chưa seed) |
+| `product_images` | `id, product_id, url, alt, position` | Ảnh sản phẩm (đã nạp 10 ảnh từ `public/upload`) |
 | `product_variants` | `id, product_id, color, color_hex, size, price, stock`, UNIQUE `(product_id, color, size)` | Biến thể màu + size + tồn kho |
 
 Index: `products(category_id)`, `products(price)`, `product_tags(tag)`, `product_variants(product_id/color/size)`.
@@ -167,9 +171,10 @@ Index: `products(category_id)`, `products(price)`, `product_tags(tag)`, `product
 |---|---|
 | categories | 11 |
 | brands | 5 (chưa gán `brand_id` cho product) |
-| products | 30 |
-| product_tags | 38 |
-| product_variants | 354 (9–12 biến thể/sản phẩm) |
+| products | 80 |
+| images | 10 |
+| tags | 90 |
+| variants | 939 (9–12 biến thể/sản phẩm) |
 
 Size theo category: `pants` → 28–34, `dress`/`skirt` → XS–L, còn lại → S–XL.
 Màu: mỗi sản phẩm có Black + White + 1 màu xoay vòng trong `colorList`.
@@ -215,11 +220,14 @@ npm run dev            # http://localhost:4000/api/v1
 
 ## 5. Việc còn lại
 
-- [ ] Bước 4: `GET /api/v1/products` (filter, sort, pagination + `meta`) và `GET /api/v1/products/:slug`
-- [ ] Bước 5: client dùng API qua `services/httpClient.js` + `hooks/useProducts.js`, bỏ `dummyjson`
-- [ ] Nối filter (giá/màu/size/category) vào query params và đồng bộ lên URL
-- [ ] Xóa `constant/masterData.js` khỏi client sau khi API thay thế xong
-- [ ] Seed ảnh sản phẩm vào `product_images`
+- [x] Tạo API `GET /api/v1/products` (hỗ trợ phân trang limit/skip + meta và thumbnail)
+- [x] Client `ProductList` kết nối API Backend thay cho `dummyjson`
+- [x] Seed ảnh sản phẩm vào `product_images` và phục vụ qua `server/public/upload`
+- [ ] Bổ sung bộ lọc (category, price, color, size) và sort cho `GET /api/v1/products`
+- [ ] Viết API chi tiết sản phẩm: `GET /api/v1/products/:slug` (kèm variants, images, tags)
+- [ ] Client dùng API qua `services/httpClient.js` + `hooks/useProducts.js` tập trung
+- [ ] Nối filter (giá/màu/size/category) của trang Shop vào query params và đồng bộ lên URL
+- [ ] Xóa `constant/masterData.js` khỏi client sau khi các trang Home/NewArrivals dùng xong API
 - [ ] Đổi tên `pages/landingPage → pages/Home`, `pages/shop → pages/ProductListing`; chuyển các section (`banner`, `topSelling`, …) vào `components/sections/`
 - [ ] Xóa `components/Pagination` (không dùng) và `App.css`
 - [ ] Nén/convert `mainBanner.svg` (6.7MB) và `TS1.svg` (1.2MB) sang WebP

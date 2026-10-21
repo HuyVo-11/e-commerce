@@ -1,8 +1,17 @@
 
 import { useEffect, useState } from 'react';
-import styles from './ProductList.module.scss'
+import styles from './ProductList.module.scss';
+import TS1 from '../../assets/TS1.svg';
 
-const itemsPerPage = 12;
+const API_BASE_URL = 'http://localhost:4000';
+
+const getThumbnailUrl = (thumbnail) => {
+    if (!thumbnail) return TS1;
+    if (thumbnail.startsWith('http')) return thumbnail;
+    return `${API_BASE_URL}${thumbnail}`;
+};
+
+const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
 
 // Trả về danh sách trang cần hiển thị, luôn chứa currentPage
@@ -42,12 +51,12 @@ const ProductList = () => {
         const fetchProducts = async () => {
             const skip = (currentPage - 1) * itemsPerPage;
             const res = await fetch(
-                `https://dummyjson.com/products?limit=${itemsPerPage}&skip=${skip}`
+                `http://localhost:4000/api/v1/products?limit=${itemsPerPage}&skip=${skip}`
             );
             const data = await res.json();
 
-            setProducts(data.products);
-            setTotalItems(data.total || 0);
+            setProducts(data.products ?? []);
+            setTotalItems(data.meta?.total ?? 0);
         };
         fetchProducts();
 
@@ -61,57 +70,59 @@ const ProductList = () => {
                 {products.map((product) => (
                     <div key={product.id} className={styles.productCard}>
                         <img
-                            src={product.thumbnail}
-                            alt={product.title}
+                            src={getThumbnailUrl(product.thumbnail)}
+                            alt={product.name}
                             width="150"
                             height="150"
                         />
-                        <h3>{product.title}</h3>
-                        <p>{product.price}</p>
+                        <h3>{product.name}</h3>
+                        <p>${product.price}</p>
                     </div>
                 ))}
             </div>
 
             <div className={styles.divider} />
 
-            <div className={styles.paginationWrapper}>
-                <div className={styles.pagination}>
-                    <button
-                        className={styles.btnLR}
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                    >&larr; Previous</button>
+            {totalPages > 1 && (
+                <div className={styles.paginationWrapper}>
+                    <div className={styles.pagination}>
+                        <button
+                            className={styles.btnLR}
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage <= 1}
+                        >&larr; Previous</button>
 
-                    <div className={styles.pageNumbers}>
-                        {getPaginationGroup(currentPage, totalPages).map((item, index) => {
-                            if (item === '...') {
+                        <div className={styles.pageNumbers}>
+                            {getPaginationGroup(currentPage, totalPages).map((item, index) => {
+                                if (item === '...') {
+                                    return (
+                                        <span key={`dots-${index}`} className={styles.dots}>
+                                            ...
+                                        </span>
+                                    );
+                                }
+
                                 return (
-                                    <span key={`dots-${index}`} className={styles.dots}>
-                                        ...
-                                    </span>
-                                );
-                            }
-
-                            return (
-                                <button
-                                    key={item}
-                                    className={`
-                                                ${styles.pageBtn}
-                                                ${currentPage === item ? styles.active : ''}`}
-                                    onClick={() => setCurrentPage(item)}
-                                >
-                                    {item}
-                                </button>
-                            )
-                        })}
+                                    <button
+                                        key={item}
+                                        className={`
+                                                    ${styles.pageBtn}
+                                                    ${currentPage === item ? styles.active : ''}`}
+                                        onClick={() => setCurrentPage(item)}
+                                    >
+                                        {item}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                        <button
+                            className={styles.btnLR}
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.max(totalPages, 1)))}
+                            disabled={currentPage >= totalPages}
+                        >Next &rarr;</button>
                     </div>
-                    <button
-                        className={styles.btnLR}
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                    >Next &rarr;</button>
                 </div>
-            </div>
+            )}
         </div>
     )
 }

@@ -1,5 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import db from './database.js';
 import { products, colors } from './seedData.js';
+
+const uploadDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/upload');
 
 const CATEGORY_NAMES = {
     shirt: 'Shirts',
@@ -96,6 +102,12 @@ const upsertProduct = db.prepare(`
 const deleteTags = db.prepare('DELETE FROM product_tags WHERE product_id = ?');
 const insertTag = db.prepare('INSERT INTO product_tags (product_id, tag) VALUES (?, ?)');
 
+const deleteImages = db.prepare('DELETE FROM product_images WHERE product_id = ?');
+const insertImage = db.prepare(`
+    INSERT INTO product_images (product_id, url, alt, position)
+    VALUES (?, ?, ?, ?)
+`);
+
 const deleteVariants = db.prepare('DELETE FROM product_variants WHERE product_id = ?');
 const insertVariant = db.prepare(`
     INSERT INTO product_variants (product_id, color, color_hex, size, price, stock)
@@ -133,6 +145,12 @@ const seed = db.transaction(() => {
             insertTag.run(product.id, tag);
         }
 
+        deleteImages.run(product.id);
+        const imageFile = path.resolve(uploadDir, `${product.id}.jpg`);
+        if (fs.existsSync(imageFile)) {
+            insertImage.run(product.id, `/upload/${product.id}.jpg`, product.name, 0);
+        }
+
         deleteVariants.run(product.id);
 
         const sizes = SIZES_BY_CATEGORY[product.category] ?? SIZES_BY_CATEGORY.default;
@@ -160,6 +178,7 @@ const stats = {
     categories: db.prepare('SELECT COUNT(*) AS count FROM categories').get().count,
     brands: db.prepare('SELECT COUNT(*) AS count FROM brands').get().count,
     products: db.prepare('SELECT COUNT(*) AS count FROM products').get().count,
+    images: db.prepare('SELECT COUNT(*) AS count FROM product_images').get().count,
     tags: db.prepare('SELECT COUNT(*) AS count FROM product_tags').get().count,
     variants: db.prepare('SELECT COUNT(*) AS count FROM product_variants').get().count,
 };
