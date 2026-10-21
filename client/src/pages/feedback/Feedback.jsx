@@ -2,7 +2,7 @@
 import FeedbackCard from '../../components/FeedbackCard/FeedbackCard';
 import styles from './Feedback.module.scss'
 import { listFeedback } from '../../constant/masterData';
-import useHorizontalScroll from '../../hook/useHorizontalScroll';
+import useHorizontalScroll from '../../hooks/useHorizontalScroll';
 
 const Feedback = () => {
     const { handleScroll, listRef, scroll, cloneData } = useHorizontalScroll('[data-review-card]', listFeedback)

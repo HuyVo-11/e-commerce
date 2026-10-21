@@ -1,0 +1,2 @@
+# Database local (sinh ra bởi npm run db:migrate / db:seed)
+# Không commit file .db

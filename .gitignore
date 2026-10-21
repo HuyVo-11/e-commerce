@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Env (chỉ commit file mẫu)
+.env
+.env.*
+!.env.example
+
+# SQLite local
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

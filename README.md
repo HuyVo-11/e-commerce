@@ -1,16 +1,69 @@
-# React + Vite
+# SHOP.CO — E-commerce
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React + Vite, backend Node.js + Express + SQLite.
 
-Currently, two official plugins are available:
+## Cấu trúc
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```text
+.
+├── client/                 # React + Vite
+│   ├── src/
+│   │   ├── pages/          # Home, Shop, NewArrivals, ...
+│   │   ├── components/     # ProductCard, Layout, filters, ...
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── constant/       # paths, navigation, mock data
+│   │   └── assets/
+│   └── package.json
+│
+└── server/                 # Express API
+    ├── src/
+    │   ├── config/         # env
+    │   ├── routes/         # /api/v1
+    │   ├── middlewares/    # errorHandler, notFound
+    │   ├── utils/          # ApiError, asyncHandler
+    │   └── db/             # database, migrations, seed
+    ├── data/               # SQLite (không commit)
+    └── package.json
+```
 
-## React Compiler
+## Yêu cầu
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js >= 22
 
-## Expanding the ESLint configuration
+## Chạy frontend
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Mặc định: http://localhost:5173
+
+## Chạy backend
+
+```bash
+cd server
+npm install
+copy .env.example .env
+npm run db:reset
+npm run dev
+```
+
+API mặc định: http://localhost:4000/api/v1
+
+- `GET /api/v1/health`
+- Database: `server/data/shop.db` (SQLite, sinh bởi `db:reset`)
+- Seed: 30 sản phẩm, 11 danh mục, 5 thương hiệu, 354 biến thể màu/size
+
+### Scripts
+
+| Script | Mô tả |
+|---|---|
+| `npm run dev` | Chạy server với watch mode |
+| `npm start` | Chạy server |
+| `npm run db:migrate` | Áp dụng migration còn thiếu |
+| `npm run db:seed` | Seed dữ liệu |
+| `npm run db:reset` | Xóa DB + migrate + seed |
+
+Biến môi trường (`server/.env`): `PORT`, `CORS_ORIGIN`, `DB_PATH`, `NODE_ENV`.
