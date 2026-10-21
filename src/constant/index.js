@@ -7,4 +7,4 @@ export const paths = {
     brands: '/brands',
 }
 
-export * from './colorData';
+export * from './masterData';

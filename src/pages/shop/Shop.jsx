@@ -4,6 +4,7 @@ import ProductSection from '../../components/ProductSection/ProductSection';
 import styles from './Shop.module.scss';
 import PriceFilter from '../../components/PriceFilter/PriceFilter';
 import ColorFilter from '../../components/ColorFilter/ColorFilter';
+import Pagination from '../../components/Pagination/Pagination';
 
 const Shop = () => {
     return (
@@ -139,18 +140,8 @@ const Shop = () => {
                         <div className={styles.divider} />
 
                         {/* Phân trang (Pagination) */}
-                        <div className={styles.pagination}>
-                            <button className={styles.btn}>&larr; Previous</button>
-                            <div className={styles.pageNumbers}>
-                                <button className={styles.pageBtn}>1</button>
-                                <button className={styles.pageBtn}>2</button>
-                                <button className={styles.pageBtn}>3</button>
-                                <button className={styles.pageBtn}>...</button>
-                                <button className={styles.pageBtn}>8</button>
-                                <button className={styles.pageBtn}>9</button>
-                                <button className={styles.pageBtn}>10</button>
-                            </div>
-                            <button className={styles.btn}>Next &rarr;</button>
+                        <div className={styles.paginationWrapper}>
+                            <Pagination/>
                         </div>
                     </div>
                 </div>

@@ -87,46 +87,6 @@
                         gap: 5px;
                     }
                 }
-
-                .pagination {
-                    width: 100%;
-                    display: flex;
-                    gap: 20px;
-                    justify-content: space-between;
-
-                    .btn {
-                        padding: 8px 14px;
-                        background: #f0f0f0;
-                        border: none;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        transition: transform 0.1s ease;
-
-                        &:active {
-                            transform: scale(0.96);
-                        }
-                    }
-
-                    .pageNumbers {
-                        display: flex;
-                        gap: 10px;
-
-                        .pageBtn {
-                            border: none;
-                            padding: 14px;
-                            border-radius: 8px;
-                            background: none;
-
-                            cursor: pointer;
-                            transition: transform 0.1s ease;
-
-                            &:active {
-                                transform: scale(0.96);
-                                background: #f0f0f0;
-                            }
-                        }
-                    }
-                }
             }
         }
     }

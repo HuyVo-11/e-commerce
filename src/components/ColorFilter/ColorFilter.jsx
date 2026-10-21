@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './ColorFilter.module.scss';
 import { ChevronDown, ChevronUp, Check } from 'lucide-react';
-import { colorList } from '../../constant/colorData';
+import { colorList } from '../../constant/masterData';
 import classNames from 'classnames';
 
 const ColorFilter = () => {

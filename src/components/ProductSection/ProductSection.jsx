@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 
 import ProductCard from '../ProductCard/ProductCard.jsx';
-import { products } from '../../constant/productData.js'
+import { products } from '../../constant/masterData';
 import styles from './ProductSection.module.scss';
 
 const CustomButton = ({
