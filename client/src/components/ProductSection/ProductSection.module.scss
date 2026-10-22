@@ -31,13 +31,18 @@
             align-items: center;
             gap: 36px;
 
+            // Cha quyết định số cột: 4 cột, card tự co giãn theo ô lưới
             .listItem {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
-                flex-wrap: wrap;
                 width: 100%;
+            }
+
+            .state {
+                padding: 40px 0;
+                text-align: center;
+                color: #6b6b6b;
             }
 
             .btn {

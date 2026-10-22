@@ -1,24 +1,35 @@
 .productCard {
-    width: calc(25% - 15px);
+    // Không tự đặt số cột (%): component cha (grid/flex) quyết định kích thước.
+    // Nhờ vậy card dùng lại được ở lưới 4 cột lẫn 3 cột.
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     .imgWrapper {
         width: 100%;
-       
+
         img {
-             max-width: 100%;
-        height: auto;
-        max-height: 100%;
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: cover;
         }
     }
 
     .productName {
         font-size: 20px;
         font-weight: 700;
-
+        line-height: 1.4;
     }
 
     .rating {
         display: flex;
+        align-items: center;
         gap: 13px;
 
         .numRating {
@@ -28,7 +39,10 @@
         }
     }
 
+    // margin-top: auto để mọi card trong cùng hàng có giá thẳng hàng ở đáy
     .price {
+        margin-top: auto;
+
         p {
             font-size: 24px !important;
             margin-bottom: 0;
@@ -36,3 +50,5 @@
         }
     }
 }
+
+

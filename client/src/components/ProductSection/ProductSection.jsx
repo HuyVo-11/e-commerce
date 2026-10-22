@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import ProductCard from '../ProductCard/ProductCard.jsx';
-import { products } from '../../constant/masterData';
+import { getProducts } from '../../services/api';
 import styles from './ProductSection.module.scss';
+
+const EMPTY_PRODUCTS = [];
 
 const CustomButton = ({
     onClick,
@@ -24,26 +26,73 @@ const ProductSection = ({
     title,
     tag,
     defaultProduct = 4,
-    step = 4,
+    step = 8,
+    maxVisible = 12,
+    maxProduct = 100,
 }) => {
-    const [visibleCount, setVisibleCount] = useState(defaultProduct);
+    // Khoá nhận diện bộ tham số đang dùng, để biết dữ liệu/trạng thái có còn khớp không
+    const requestKey = `${tag ?? ''}|${maxProduct}|${maxVisible}`;
 
-    // Chỉ lọc lại khi tag thay đổi, không lọc lại mỗi lần bấm nút
-    const filteredProducts = useMemo(
-        () => products.filter(product => product.tag?.includes(tag)),
-        [tag]
+    // Kết quả của lần gọi API gần nhất (kèm requestKey tương ứng)
+    const [result, setResult] = useState({
+        key: requestKey,
+        products: [],
+        status: 'loading', // loading | success | error
+    });
+
+    // Số sản phẩm đang hiển thị, gắn với requestKey để tự reset khi đổi tag
+    const [paging, setPaging] = useState({
+        key: requestKey,
+        count: defaultProduct,
+    });
+
+    // Dữ liệu lấy từ API backend (nguồn duy nhất), lọc theo tag ở server
+    useEffect(() => {
+        let cancelled = false;
+        const key = `${tag ?? ''}|${maxProduct}|${maxVisible}`;
+        const limit = Math.min(maxProduct, maxVisible);
+
+        getProducts({ tag, limit })
+            .then(data => {
+                if (cancelled) return;
+
+                setResult({ key, products: data.products ?? [], status: 'success' });
+            })
+            .catch(() => {
+                if (cancelled) return;
+
+                setResult({ key, products: [], status: 'error' });
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [tag, maxProduct, maxVisible]);
+
+    // Dữ liệu của bộ tham số cũ được coi như đang tải, không cần setState trong effect
+    const isFresh = result.key === requestKey;
+    const status = isFresh ? result.status : 'loading';
+    const products = isFresh ? result.products : EMPTY_PRODUCTS;
+    const displayed = paging.key === requestKey ? paging.count : defaultProduct;
+
+    const visibleList = useMemo(
+        () => products.slice(0, displayed),
+        [products, displayed]
     );
 
-    const visibleList = filteredProducts.slice(0, visibleCount);
-    const hasMore = visibleCount < filteredProducts.length;
-    const canCollapse = filteredProducts.length > defaultProduct;
+    // Chỉ được xem tối đa maxVisible (12) sản phẩm
+    const hasMore = displayed < Math.min(products.length, maxVisible);
+    const canCollapse = displayed > defaultProduct;
 
     const handleShowMore = () => {
-        setVisibleCount(count => Math.min(count + step, filteredProducts.length));
+        setPaging({
+            key: requestKey,
+            count: Math.min(displayed + step, products.length, maxVisible),
+        });
     }
 
     const handleShowLess = () => {
-        setVisibleCount(defaultProduct);
+        setPaging({ key: requestKey, count: defaultProduct });
     }
 
     const renderAction = () => {
@@ -70,6 +119,34 @@ const ProductSection = ({
         return null;
     }
 
+    const renderBody = () => {
+        if (status === 'loading') {
+            return <p className={styles.state}>Loading products...</p>;
+        }
+
+        if (status === 'error') {
+            return (
+                <p className={styles.state}>
+                    Unable to load products. Please make sure the API server is running.
+                </p>
+            );
+        }
+
+        return (
+            <>
+                <div className={styles.listItem}>
+                    {visibleList.map(product => (
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                        />
+                    ))}
+                </div>
+                {renderAction()}
+            </>
+        );
+    }
+
     return (
         <div className={styles.productSectionWrapper}>
             <div className={styles.productSectionContainer}>
@@ -79,15 +156,7 @@ const ProductSection = ({
                     </div>
                 )}
                 <div className={styles.displayCard}>
-                    <div className={styles.listItem}>
-                        {visibleList.map(product => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                            />
-                        ))}
-                    </div>
-                    {renderAction()}
+                    {renderBody()}
                 </div>
             </div>
         </div>

@@ -15,7 +15,8 @@ e-commerce/
 │   ├── src/
 │   │   ├── assets/                          # Ảnh, logo thương hiệu, icon, banner
 │   │   │   ├── mainBanner.svg               # Nền hero (raster nhúng base64, ~6.7MB)
-│   │   │   ├── TS1.svg                      # Ảnh sản phẩm mẫu
+│   │   │   ├── TS1.svg                      # Ảnh sản phẩm mẫu (fallback khi API chưa có ảnh)
+│   │   │   ├── {casual,formal,party,gym}.svg # Ảnh minh hoạ "Browse by dress style"
 │   │   │   ├── hero.png, searchIcon.svg
 │   │   │   └── {ck,gc,pd,vs,zr}.svg         # Logo Calvin Klein, Gucci, Prada, Versace, Zara
 │   │   │
@@ -29,9 +30,9 @@ e-commerce/
 │   │   │   │       ├── FooterLayout.{jsx,module.scss}
 │   │   │   │       ├── FooterNavbar/FooterNavbar.{jsx,module.scss}      # đang comment, chưa dùng
 │   │   │   │       └── Subscription/Subscription.{jsx,module.scss}
-│   │   │   ├── ProductCard/                 # Thẻ sản phẩm (ảnh, tên, sao, giá)
-│   │   │   ├── ProductSection/              # Section lọc theo tag + SHOW MORE / SHOW LESS
-│   │   │   ├── ProductList/                 # Lưới sản phẩm 3 cột + phân trang (đã nối API Backend localhost:4000)
+│   │   │   ├── ProductCard/                 # Thẻ 1 sản phẩm: ảnh, tên, sao, giá (variant 'default' | 'shop')
+│   │   │   ├── ProductSection/              # Section theo tag từ API: 4 → 12 sản phẩm (SHOW MORE / SHOW LESS)
+│   │   │   ├── ProductList/                 # Lưới 3 cột, phân trang 9/trang – dùng lại ProductCard
 │   │   │   ├── FeedbackCard/                # Thẻ đánh giá khách hàng
 │   │   │   ├── ColorFilter/                 # Bộ lọc màu (state cục bộ)
 │   │   │   ├── PriceFilter/                 # Bộ lọc giá (MUI Slider, state cục bộ)
@@ -55,7 +56,10 @@ e-commerce/
 │   │   ├── constant/
 │   │   │   ├── index.js                       # paths + re-export masterData
 │   │   │   ├── path.js                        # routes, navLinks, brands, dressStyles
-│   │   │   └── masterData.js                  # TẠM THỜI: products (30), colorList, listFeedback
+│   │   │   └── masterData.js                  # Hằng số UI: colorList (10), listFeedback (5)
+│   │   │
+│   │   ├── services/
+│   │   │   └── api.js                         # API_BASE_URL, resolveImageUrl, getProducts (nơi duy nhất gọi backend)
 │   │   │
 │   │   ├── router/Routers.jsx                 # Map cấu hình routes -> <Route>
 │   │   ├── App.jsx                            # RootLayout + AppRouter
@@ -74,7 +78,7 @@ e-commerce/
 │   │   └── upload/                          # Ảnh sản phẩm (P001.jpg -> P010.jpg)
 │   ├── src/
 │   │   ├── config/env.js                    # Đọc & validate PORT, CORS_ORIGIN, DB_PATH
-│   │   ├── routes/index.js                  # Router /api/v1 (GET /health, GET /products)
+│   │   ├── routes/index.js                  # Router /api/v1 (GET /health, GET /products?tag=)
 │   │   ├── middlewares/
 │   │   │   ├── notFound.js                  # 404 -> ApiError
 │   │   │   └── errorHandler.js              # Mọi lỗi -> { error: { code, message } }
@@ -123,10 +127,14 @@ e-commerce/
 
 **Dữ liệu hiện tại**
 
-- Home/NewArrivals/TopSelling: đọc `products` từ `constant/masterData.js` → `ProductSection` lọc theo `tag`, phân trang bằng state `visibleCount` (mặc định 4, mỗi lần +4, có SHOW LESS).
-- Shop: `ProductList` gọi trực tiếp API Backend `http://localhost:4000/api/v1/products` (9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`). Ảnh sản phẩm tải trực tiếp từ Backend (`http://localhost:4000/upload/...`), fallback về `TS1.svg`.
-- Filter màu/giá trong `Shop` đang giữ **state cục bộ**, chưa nối vào danh sách sản phẩm.
-- Ảnh trong `ProductCard` đang hardcode `TS1.svg`, chưa dùng `product.image`.
+- Nguồn sản phẩm duy nhất là **API Backend**; `constant/masterData.js` không còn chứa sản phẩm (chỉ còn `colorList`, `listFeedback`).
+- Mọi lời gọi API đi qua `src/services/api.js`: `API_BASE_URL` (mặc định `http://localhost:4000`, override bằng `VITE_API_URL`), `resolveImageUrl()`, `getProducts({ tag, limit, skip })`.
+- Home/NewArrivals/TopSelling: `ProductSection` gọi `getProducts({ tag, limit: 12 })` — server lọc theo tag (`new` / `popular`). Hiển thị **4** sản phẩm đầu; SHOW MORE hiện thêm **8** (tổng **12**) và nút đổi thành SHOW LESS (về 4). Có trạng thái loading và lỗi.
+- Shop: `ProductList` gọi `getProducts({ limit: 9, skip })` — 9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`.
+- Cả hai dùng chung `ProductCard`: ảnh lấy từ `thumbnail` của API (`/upload/...`), fallback `TS1.svg`; `variant='default'` cho lưới 4 cột, `variant='shop'` cho lưới 3 cột (ảnh cao 250px, tên clamp 2 dòng).
+- Số cột do component cha quyết định (`grid-template-columns`); `ProductCard` luôn `width: 100%`, không tự đặt kích thước.
+- Filter màu/giá trong `Shop` vẫn là **state cục bộ**, chưa nối vào danh sách sản phẩm.
+- Ảnh thật chỉ có cho `P001`–`P010`; 70 sản phẩm còn lại hiển thị fallback `TS1.svg`.
 
 ---
 
@@ -140,7 +148,11 @@ server.js
        ├─ /upload → express.static('public/upload')  (phục vụ ảnh sản phẩm)
        ├─ /api/v1 → routes/index.js
        │     ├─ GET /health    → { status, uptime, timestamp }
-       │     └─ GET /products  → { products, meta, skip } (phân trang limit/skip, kèm thumbnail)
+       │     └─ GET /products  → { products, meta, skip }
+       │           ├─ query: limit, skip, tag (tag rỗng = không lọc)
+       │           ├─ products[]: id, slug, name, price, rating, description,
+       │           │              category, thumbnail, tags[]
+       │           └─ meta: page, limit, total, totalPages (total tính theo tag)
        ├─ notFound             → 404 { error: { code: "ROUTE_NOT_FOUND", ... } }
        └─ errorHandler         → 500/4xx cùng format JSON
 ```
@@ -206,6 +218,14 @@ npm run dev            # http://localhost:4000/api/v1
 | `CORS_ORIGIN` | `http://localhost:5173` | Origin được phép, phân tách bằng dấu phẩy |
 | `DB_PATH` | `./data/shop.db` | Đường dẫn SQLite, tính từ `server/` |
 
+### Biến môi trường (`client/.env`, tuỳ chọn)
+
+| Biến | Mặc định | Mô tả |
+|---|---|---|
+| `VITE_API_URL` | `http://localhost:4000` | Base URL API backend, đọc trong `client/src/services/api.js` |
+
+> Frontend bắt buộc có backend đang chạy, nếu không `ProductSection`/`ProductList` sẽ hiển thị thông báo lỗi tải dữ liệu.
+
 ### Scripts
 
 | Nơi | Script | Mô tả |
@@ -220,15 +240,19 @@ npm run dev            # http://localhost:4000/api/v1
 
 ## 5. Việc còn lại
 
-- [x] Tạo API `GET /api/v1/products` (hỗ trợ phân trang limit/skip + meta và thumbnail)
+- [x] Tạo API `GET /api/v1/products` (phân trang limit/skip + meta + thumbnail)
+- [x] Lọc theo tag ở server: `?tag=new|popular`, kèm `tags[]` trong từng sản phẩm
 - [x] Client `ProductList` kết nối API Backend thay cho `dummyjson`
 - [x] Seed ảnh sản phẩm vào `product_images` và phục vụ qua `server/public/upload`
+- [x] Gom mọi lời gọi API vào `client/src/services/api.js` (`API_BASE_URL`, `resolveImageUrl`, `getProducts`)
+- [x] `ProductCard` dùng chung cho `ProductSection` (4 cột) và `ProductList` (3 cột) qua prop `variant`
+- [x] Bỏ mảng `products` khỏi `constant/masterData.js` (chỉ giữ `colorList`, `listFeedback`)
 - [ ] Bổ sung bộ lọc (category, price, color, size) và sort cho `GET /api/v1/products`
 - [ ] Viết API chi tiết sản phẩm: `GET /api/v1/products/:slug` (kèm variants, images, tags)
-- [ ] Client dùng API qua `services/httpClient.js` + `hooks/useProducts.js` tập trung
+- [ ] Thêm `hooks/useProducts.js` để tái sử dụng logic gọi API
 - [ ] Nối filter (giá/màu/size/category) của trang Shop vào query params và đồng bộ lên URL
-- [ ] Xóa `constant/masterData.js` khỏi client sau khi các trang Home/NewArrivals dùng xong API
 - [ ] Đổi tên `pages/landingPage → pages/Home`, `pages/shop → pages/ProductListing`; chuyển các section (`banner`, `topSelling`, …) vào `components/sections/`
 - [ ] Xóa `components/Pagination` (không dùng) và `App.css`
+- [ ] Bổ sung ảnh cho 70 sản phẩm còn lại (hiện fallback `TS1.svg`)
 - [ ] Nén/convert `mainBanner.svg` (6.7MB) và `TS1.svg` (1.2MB) sang WebP
 - [ ] Responsive cho Shop/Banner/ProductCard

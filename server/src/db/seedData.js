@@ -8,7 +8,7 @@ export const products = [
         "price": 49.99,
         "category": "shirt",
         "tag": [
-            "new"
+            "onSale"
         ],
         "rating": 3.8,
         "description": "Timeless white Oxford shirt crafted from 100% premium cotton. Perfect for both casual and formal occasions."

@@ -1,15 +1,8 @@
-
 import { useEffect, useState } from 'react';
+
+import ProductCard from '../ProductCard/ProductCard.jsx';
+import { getProducts } from '../../services/api';
 import styles from './ProductList.module.scss';
-import TS1 from '../../assets/TS1.svg';
-
-const API_BASE_URL = 'http://localhost:4000';
-
-const getThumbnailUrl = (thumbnail) => {
-    if (!thumbnail) return TS1;
-    if (thumbnail.startsWith('http')) return thumbnail;
-    return `${API_BASE_URL}${thumbnail}`;
-};
 
 const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
@@ -46,20 +39,37 @@ const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const skip = (currentPage - 1) * itemsPerPage;
-            const res = await fetch(
-                `http://localhost:4000/api/v1/products?limit=${itemsPerPage}&skip=${skip}`
-            );
-            const data = await res.json();
+        let cancelled = false;
 
-            setProducts(data.products ?? []);
-            setTotalItems(data.meta?.total ?? 0);
+        const fetchProducts = async () => {
+            try {
+                const data = await getProducts({
+                    limit: itemsPerPage,
+                    skip: (currentPage - 1) * itemsPerPage,
+                });
+
+                if (cancelled) return;
+
+                setProducts(data.products ?? []);
+                setTotalItems(data.meta?.total ?? 0);
+                setError(false);
+            } catch {
+                if (cancelled) return;
+
+                setProducts([]);
+                setTotalItems(0);
+                setError(true);
+            }
         };
+
         fetchProducts();
 
+        return () => {
+            cancelled = true;
+        };
     }, [currentPage]);
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -67,17 +77,18 @@ const ProductList = () => {
     return (
         <div className={styles.productListWrapper}>
             <div className={styles.productGrid}>
+                {error && (
+                    <p className={styles.state}>
+                        Unable to load products. Please make sure the API server is running.
+                    </p>
+                )}
+
                 {products.map((product) => (
-                    <div key={product.id} className={styles.productCard}>
-                        <img
-                            src={getThumbnailUrl(product.thumbnail)}
-                            alt={product.name}
-                            width="150"
-                            height="150"
-                        />
-                        <h3>{product.name}</h3>
-                        <p>${product.price}</p>
-                    </div>
+                    <ProductCard
+                        key={product.id}
+                        product={product}
+                        variant='shop'
+                    />
                 ))}
             </div>
 
