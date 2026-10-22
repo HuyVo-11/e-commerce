@@ -146,7 +146,7 @@ const ProductSection = ({
             </>
         );
     }
-
+console.log({title});
     return (
         <div className={styles.productSectionWrapper}>
             <div className={styles.productSectionContainer}>

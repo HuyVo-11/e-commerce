@@ -1,5 +1,5 @@
 
-import { dressStyles } from '../../constant/path';
+import { dressStyles } from '../../constant/masterData';
 
 import styles from './DressStyle.module.scss'
 

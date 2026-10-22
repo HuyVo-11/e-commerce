@@ -11,7 +11,6 @@ const LandingPage = () => {
         <div className={styles.landingPage}>
             <Banner />
             <NewArrivals/>
-            <hr className={styles.line}/>
             <TopSelling/>
             <DressStyle/>
             <Feedback/>

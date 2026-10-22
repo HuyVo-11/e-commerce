@@ -1,4 +1,8 @@
-import { brands } from '../../constant/path';
+import { brands } from '../../constant/masterData';
+import { Link } from "react-router-dom";
+
+import { paths } from '../../constant';
+
 import styles from './Banner.module.scss';
 
 const Banner = () => {
@@ -15,7 +19,9 @@ const Banner = () => {
                             and cater to your sense of style.
                         </p>
                     </div>
-                    <button className={styles.shopBtn}>Shop Now</button>
+                    <Link to={paths.shop} className={styles.shopBtn}>
+                       Shop Now
+                    </Link>
                     <div className={styles.qtyWrapper}>
                         <div className={styles.qtyBrands}>
                             <h3>200+</h3>

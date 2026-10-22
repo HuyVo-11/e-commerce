@@ -1,10 +1,3 @@
-// paths
-export const paths = {
-    landingPage: '/',
-    shop: '/shop',
-    onSale: '/onSale',
-    newArrivals: '/newArrivals',
-    brands: '/brands',
-}
-
+export * from './path';
 export * from './masterData';
+export * from './navMenuConfig';

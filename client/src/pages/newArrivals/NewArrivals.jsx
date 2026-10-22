@@ -1,4 +1,5 @@
 import ProducSection from '../../components/ProductSection/ProductSection.jsx';
+import {PRODUCT_TAGS} from '../../constant/masterData.js'
 
 import styles from './NewArrivals.module.scss';
 
@@ -6,8 +7,7 @@ const NewArrivals = () => {
     return (
         <div className={styles.newArrivalsWrapper}>
             <ProducSection
-                title="NEW ARRIVALS"
-                tag="new"
+                {...PRODUCT_TAGS.NEW}
             />
         </div>
     )
