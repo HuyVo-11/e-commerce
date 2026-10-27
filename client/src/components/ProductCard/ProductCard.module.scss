@@ -10,7 +10,6 @@
 
     .imgWrapper {
         width: 100%;
-
         img {
             display: block;
             width: 100%;
@@ -48,6 +47,41 @@
             margin-bottom: 0;
             font-weight: 700;
         }
+    }
+}
+
+// Biến thể cho lưới Shop (3 cột): cố định chiều cao ảnh + vùng tên
+// => mọi card cùng kích thước, chuyển trang không thay đổi chiều cao lưới
+.shop {
+    .imgWrapper {
+        height: 250px;
+        overflow: hidden;
+        border-radius: 16px;
+        background-color: #f0eeed;
+
+        img {
+            width: 100%;
+            height: 250px;
+            max-height: 250px;
+            object-fit: cover;
+        }
+    }
+
+    .productName {
+        font-size: 18px;
+        min-height: 2.8em;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        p {
+            font-size: 18px !important;
+        }
+    }
+
+    .price p {
+        font-size: 20px !important;
     }
 }
 

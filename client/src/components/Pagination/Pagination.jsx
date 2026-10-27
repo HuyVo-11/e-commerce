@@ -2,10 +2,10 @@ import { useState } from 'react';
 import styles from './Pagination.module.scss'
 
 const Pagination = () => {
-    const [currentPage, setcurrentPage] = useState(1);
-    console.log(currentPage);
 
+    const [setcurrentPage] = useState(1);
     const totalPages = 8;
+
     return (
         <div className={styles.paginationWrapper}>
             <div className={styles.pagination}>

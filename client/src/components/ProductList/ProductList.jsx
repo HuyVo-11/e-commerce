@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import ProductCard from '../ProductCard/ProductCard.jsx';
 import { getProducts } from '../../services/api';
@@ -7,39 +8,49 @@ import styles from './ProductList.module.scss';
 const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
 
-// Trả về danh sách trang cần hiển thị, luôn chứa currentPage
+// Trả về danh sách index trang (0-based) cần hiển thị, luôn chứa currentPage
 const getPaginationGroup = (currentPage, totalPages) => {
     if (totalPages <= MAX_PAGE_BUTTONS) {
-        return Array.from({ length: totalPages }, (_, i) => i + 1);
+        return Array.from({ length: totalPages }, (_, i) => i);
     }
 
-    // Gần đầu: 1 2 3 4 5 ... last
-    if (currentPage <= 4) {
-        return [1, 2, 3, 4, 5, '...', totalPages];
+    // Gần đầu: 0 1 2 3 4 ... last
+    if (currentPage <= 3) {
+        return [0, 1, 2, 3, 4, '...', totalPages - 1];
     }
 
-    // Gần cuối: 1 ... last-4 last-3 last-2 last-1 last
-    if (currentPage >= totalPages - 3) {
+    // Gần cuối: 0 ... last-4 last-3 last-2 last-1 last
+    if (currentPage >= totalPages - 4) {
         return [
-            1,
+            0,
             '...',
+            totalPages - 5,
             totalPages - 4,
             totalPages - 3,
             totalPages - 2,
             totalPages - 1,
-            totalPages,
         ];
     }
 
-    // Ở giữa: 1 ... p-1 p p+1 ... last
-    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+    // Ở giữa: 0 ... p-1 p p+1 ... last
+    return [0, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages - 1];
 };
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    console.log(searchParams.toString());
+
     const [totalItems, setTotalItems] = useState(0);
     const [error, setError] = useState(false);
+
+    const rawPage = Number.parseInt(searchParams.get('page') ?? '0', 10);
+    const currentPage = Number.isInteger(rawPage) && rawPage >= 0 ? rawPage : 0;
+    const goToPage = (page) => {
+        const nextSearchParams = new URLSearchParams(searchParams);
+        nextSearchParams.set('page', String(page));
+        setSearchParams(nextSearchParams);
+    };
 
     useEffect(() => {
         let cancelled = false;
@@ -48,7 +59,7 @@ const ProductList = () => {
             try {
                 const data = await getProducts({
                     limit: itemsPerPage,
-                    skip: (currentPage - 1) * itemsPerPage,
+                    skip: currentPage * itemsPerPage,
                 });
 
                 if (cancelled) return;
@@ -99,9 +110,11 @@ const ProductList = () => {
                     <div className={styles.pagination}>
                         <button
                             className={styles.btnLR}
-                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                            disabled={currentPage <= 1}
-                        >&larr; Previous</button>
+                            onClick={() => goToPage(Math.max(currentPage - 1, 0))}
+                            disabled={currentPage <= 0}
+                        >
+                            &larr; Previous
+                        </button>
 
                         <div className={styles.pageNumbers}>
                             {getPaginationGroup(currentPage, totalPages).map((item, index) => {
@@ -116,26 +129,27 @@ const ProductList = () => {
                                 return (
                                     <button
                                         key={item}
-                                        className={`
-                                                    ${styles.pageBtn}
-                                                    ${currentPage === item ? styles.active : ''}`}
-                                        onClick={() => setCurrentPage(item)}
+                                        className={`${styles.pageBtn} ${currentPage === item ? styles.active : ''}`}
+                                        onClick={() => goToPage(item)}
                                     >
-                                        {item}
+                                        {item + 1}
                                     </button>
-                                )
+                                );
                             })}
                         </div>
+
                         <button
                             className={styles.btnLR}
-                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.max(totalPages, 1)))}
-                            disabled={currentPage >= totalPages}
-                        >Next &rarr;</button>
+                            onClick={() => goToPage(Math.min(currentPage + 1, totalPages - 1))}
+                            disabled={currentPage >= totalPages - 1}
+                        >
+                            Next &rarr;
+                        </button>
                     </div>
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default ProductList;
