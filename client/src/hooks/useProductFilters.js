@@ -6,7 +6,7 @@ import { sizeList } from '../constant/masterData';
 const PRICE_MIN = 0;
 const PRICE_MAX = 250;
 const PRICE_PATTERN = /^\d+(?:\.\d+)?$/;
-const FIRST_PAGE = 0;
+const FIRST_PAGE = 1;
 
 // Đọc giá từ URL; trả null nếu không truyền hoặc không hợp lệ
 const parsePriceParam = (value) => {

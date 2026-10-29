@@ -7,38 +7,38 @@ import styles from './ProductList.module.scss';
 const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
 
-// Trả về danh sách index trang (0-based) cần hiển thị, luôn chứa currentPage
+// Trả về danh sách số trang (1-based) cần hiển thị, luôn chứa currentPage
 const getPaginationGroup = (currentPage, totalPages) => {
     if (totalPages <= MAX_PAGE_BUTTONS) {
-        return Array.from({ length: totalPages }, (_, i) => i);
+        return Array.from({ length: totalPages }, (_, index) => index + 1);
     }
 
-    // Gần đầu: 0 1 2 3 4 ... last
-    if (currentPage <= 3) {
-        return [0, 1, 2, 3, 4, '...', totalPages - 1];
+    // Gần đầu: 1 2 3 4 5 ... last
+    if (currentPage <= 4) {
+        return [1, 2, 3, 4, 5, '...', totalPages];
     }
 
-    // Gần cuối: 0 ... last-4 last-3 last-2 last-1 last
-    if (currentPage >= totalPages - 4) {
+    // Gần cuối: 1 ... last-4 last-3 last-2 last-1 last
+    if (currentPage >= totalPages - 3) {
         return [
-            0,
+            1,
             '...',
-            totalPages - 5,
             totalPages - 4,
             totalPages - 3,
             totalPages - 2,
             totalPages - 1,
+            totalPages,
         ];
     }
 
-    // Ở giữa: 0 ... p-1 p p+1 ... last
-    return [0, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages - 1];
+    // Ở giữa: 1 ... p-1 p p+1 ... last
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
 };
 
 const ProductList = ({ filters, errors = {}, isValid = true }) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const rawPage = Number.parseInt(searchParams.get('page') ?? '0', 10);
-    const currentPage = Number.isInteger(rawPage) && rawPage >= 0 ? rawPage : 0;
+    const rawPage = Number.parseInt(searchParams.get('page') ?? '1', 10);
+    const currentPage = Number.isInteger(rawPage) && rawPage >= 1 ? rawPage : 1;
     const goToPage = (page) => {
         const nextSearchParams = new URLSearchParams(searchParams);
         nextSearchParams.set('page', String(page));
@@ -92,8 +92,8 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
                     <div className={styles.pagination}>
                         <button
                             className={styles.btnLR}
-                            onClick={() => goToPage(Math.max(currentPage - 1, 0))}
-                            disabled={currentPage <= 0}
+                            onClick={() => goToPage(Math.max(currentPage - 1, 1))}
+                            disabled={currentPage <= 1}
                         >
                             &larr; Previous
                         </button>
@@ -114,7 +114,7 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
                                         className={`${styles.pageBtn} ${currentPage === item ? styles.active : ''}`}
                                         onClick={() => goToPage(item)}
                                     >
-                                        {item + 1}
+                                        {item}
                                     </button>
                                 );
                             })}
@@ -122,8 +122,8 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
 
                         <button
                             className={styles.btnLR}
-                            onClick={() => goToPage(Math.min(currentPage + 1, totalPages - 1))}
-                            disabled={currentPage >= totalPages - 1}
+                            onClick={() => goToPage(Math.min(currentPage + 1, totalPages))}
+                            disabled={currentPage >= totalPages}
                         >
                             Next &rarr;
                         </button>
