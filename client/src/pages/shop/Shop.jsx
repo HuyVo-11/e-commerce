@@ -4,7 +4,6 @@ import { FaSliders } from 'react-icons/fa6';
 
 import styles from './Shop.module.scss';
 import PriceFilter from '../../components/PriceFilter/PriceFilter';
-import ColorFilter from '../../components/ColorFilter/ColorFilter';
 import ProductList from '../../components/ProductList/ProductList';
 
 const PRICE_MIN = 0;
@@ -114,11 +113,6 @@ const Shop = () => {
                                 min={PRICE_MIN}
                                 max={PRICE_MAX}
                             />
-                        </div>
-
-                        {/* Màu sắc (Colors) */}
-                        <div className={styles.filterSection}>
-                            <ColorFilter />
                         </div>
 
                         <div className={styles.divider} />
