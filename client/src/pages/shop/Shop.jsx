@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { FaSliders } from 'react-icons/fa6';
 
 import styles from './Shop.module.scss';
@@ -5,7 +7,68 @@ import PriceFilter from '../../components/PriceFilter/PriceFilter';
 import ColorFilter from '../../components/ColorFilter/ColorFilter';
 import ProductList from '../../components/ProductList/ProductList';
 
+const PRICE_MIN = 0;
+const PRICE_MAX = 250;
+const PRICE_PATTERN = /^\d+(?:\.\d+)?$/;
+
+// Đọc giá từ URL; trả null nếu không truyền hoặc không hợp lệ
+const parsePriceParam = (value) => {
+    if (value === null) return null;
+
+    const trimmed = value.trim();
+
+    if (!PRICE_PATTERN.test(trimmed)) return null;
+
+    return Number(trimmed);
+};
+
 const Shop = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const urlMinPrice = Math.min(
+        Math.max(parsePriceParam(searchParams.get('minPrice')) ?? PRICE_MIN, PRICE_MIN),
+        PRICE_MAX
+    );
+    const urlMaxPrice = Math.min(
+        Math.max(parsePriceParam(searchParams.get('maxPrice')) ?? PRICE_MAX, PRICE_MIN),
+        PRICE_MAX
+    );
+
+    const urlPriceRange = [
+        Math.min(urlMinPrice, urlMaxPrice),
+        Math.max(urlMinPrice, urlMaxPrice),
+    ];
+    const urlPriceKey = `${urlPriceRange[0]}:${urlPriceRange[1]}`;
+
+    // Draft chỉ có hiệu lực khi URL chưa đổi; URL đổi (Apply/back/forward)
+    // thì slider tự lấy giá trị mới, không cần setState trong useEffect.
+    const [priceDraft, setPriceDraft] = useState({
+        key: urlPriceKey,
+        range: urlPriceRange,
+    });
+    const priceRange = priceDraft.key === urlPriceKey ? priceDraft.range : urlPriceRange;
+
+    const handlePriceChange = (range) => {
+        setPriceDraft({ key: urlPriceKey, range });
+    };
+
+    const handleApplyFilter = () => {
+        const [minPrice, maxPrice] = priceRange;
+        const nextSearchParams = new URLSearchParams(searchParams);
+
+        if (minPrice === PRICE_MIN && maxPrice === PRICE_MAX) {
+            nextSearchParams.delete('minPrice');
+            nextSearchParams.delete('maxPrice');
+        } else {
+            nextSearchParams.set('minPrice', String(minPrice));
+            nextSearchParams.set('maxPrice', String(maxPrice));
+        }
+
+        // Đổi filter phải quay về trang đầu
+        nextSearchParams.set('page', '0');
+        setSearchParams(nextSearchParams);
+    };
+
     return (
         <div className={styles.shopWrapper}>
             <div className={styles.shopContainer}>
@@ -50,7 +113,12 @@ const Shop = () => {
 
                         {/* Khoảng giá (Price) */}
                         <div className={styles.filterSection}>
-                            <PriceFilter />
+                            <PriceFilter
+                                value={priceRange}
+                                onChange={handlePriceChange}
+                                min={PRICE_MIN}
+                                max={PRICE_MAX}
+                            />
                         </div>
 
                         {/* Màu sắc (Colors) */}
@@ -109,7 +177,13 @@ const Shop = () => {
 
                         {/* Nút áp dụng */}
                         <div className={styles.applyFilterWrapper}>
-                            <button className={styles.applyBtn}>Apply Filter</button>
+                            <button
+                                type='button'
+                                className={styles.applyBtn}
+                                onClick={handleApplyFilter}
+                            >
+                                Apply Filter
+                            </button>
                         </div>
                     </div>
 

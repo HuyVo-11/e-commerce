@@ -9,13 +9,11 @@ const valueText = (value) => {
     return (`$${value}`);
 }
 
-const PriceFilter = () => {
+const PriceFilter = ({ value, onChange, min = 0, max = 250 }) => {
     const [isOpen, setIsOpen] = useState(true);
 
-    const [value, setValue] = useState([100, 200]);
-
     const handleOnChange = (e, newValue) => {
-        setValue(newValue);
+        onChange(newValue);
     };
 
     return (
@@ -40,8 +38,8 @@ const PriceFilter = () => {
                     valueLabelDisplay='on'
                     valueLabelFormat={valueText}
                     getAriaValueText={valueText}
-                    min={50}
-                    max={250}
+                    min={min}
+                    max={max}
                     disableSwap
                 />
             </div>

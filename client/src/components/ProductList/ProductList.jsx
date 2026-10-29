@@ -7,6 +7,18 @@ import styles from './ProductList.module.scss';
 
 const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
+const PRICE_PATTERN = /^\d+(?:\.\d+)?$/;
+
+// Bỏ qua giá không hợp lệ để tránh gọi API lỗi
+const parsePriceParam = (value) => {
+    if (value === null) return undefined;
+
+    const trimmed = value.trim();
+
+    if (!PRICE_PATTERN.test(trimmed)) return undefined;
+
+    return Number(trimmed);
+};
 
 // Trả về danh sách index trang (0-based) cần hiển thị, luôn chứa currentPage
 const getPaginationGroup = (currentPage, totalPages) => {
@@ -39,7 +51,8 @@ const getPaginationGroup = (currentPage, totalPages) => {
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
-    console.log(searchParams.toString());
+    const minPrice = parsePriceParam(searchParams.get('minPrice'));
+    const maxPrice = parsePriceParam(searchParams.get('maxPrice'));
 
     const [totalItems, setTotalItems] = useState(0);
     const [error, setError] = useState(false);
@@ -58,6 +71,8 @@ const ProductList = () => {
         const fetchProducts = async () => {
             try {
                 const data = await getProducts({
+                    minPrice,
+                    maxPrice,
                     limit: itemsPerPage,
                     skip: currentPage * itemsPerPage,
                 });
@@ -81,7 +96,7 @@ const ProductList = () => {
         return () => {
             cancelled = true;
         };
-    }, [currentPage]);
+    }, [currentPage, minPrice, maxPrice]);
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 

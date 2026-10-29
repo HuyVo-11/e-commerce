@@ -30,7 +30,7 @@ const request = async (path, params = {}) => {
     return response.json();
 };
 
-// GET /api/v1/products?tag=&limit=&skip=
+// GET /api/v1/products?tag=&minPrice=&maxPrice=&limit=&skip=
 // Trả về { products: [{ ...product, tags: string[] }], meta, skip }
-export const getProducts = ({ tag, limit = 9, skip = 0 } = {}) =>
-    request('/api/v1/products', { tag, limit, skip });
+export const getProducts = ({ tag, minPrice, maxPrice, limit = 9, skip = 0 } = {}) =>
+    request('/api/v1/products', { tag, minPrice, maxPrice, limit, skip });

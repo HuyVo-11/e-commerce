@@ -35,7 +35,7 @@ e-commerce/
 │   │   │   ├── ProductList/                 # Lưới 3 cột, phân trang 9/trang – dùng lại ProductCard
 │   │   │   ├── FeedbackCard/                # Thẻ đánh giá khách hàng
 │   │   │   ├── ColorFilter/                 # Bộ lọc màu (state cục bộ)
-│   │   │   ├── PriceFilter/                 # Bộ lọc giá (MUI Slider, state cục bộ)
+│   │   │   ├── PriceFilter/                 # Bộ lọc giá (MUI Slider, controlled qua value/onChange)
 │   │   │   ├── Pagination/                  # Phân trang tĩnh (chưa được dùng)
 │   │   │   └── Breadcrumb/                  # Breadcrumb tự sinh từ URL
 │   │   │
@@ -78,7 +78,7 @@ e-commerce/
 │   │   └── upload/                          # Ảnh sản phẩm (P001.jpg -> P010.jpg)
 │   ├── src/
 │   │   ├── config/env.js                    # Đọc & validate PORT, CORS_ORIGIN, DB_PATH
-│   │   ├── routes/index.js                  # Router /api/v1 (GET /health, GET /products?tag=)
+│   │   ├── routes/index.js                  # Router /api/v1 (GET /health, GET /products?tag=&minPrice=&maxPrice=)
 │   │   ├── middlewares/
 │   │   │   ├── notFound.js                  # 404 -> ApiError
 │   │   │   └── errorHandler.js              # Mọi lỗi -> { error: { code, message } }
@@ -120,7 +120,7 @@ e-commerce/
 | Route | Component | Ghi chú |
 |---|---|---|
 | `/` | `LandingPage` | Banner → NewArrivals → TopSelling → DressStyle → Feedback |
-| `/shop` | `Shop` | Sidebar filter tĩnh + `ProductList` |
+| `/shop` | `Shop` | Sidebar filter (giá đã nối API) + `ProductList` |
 | `/newArrivals` | `NewArrivals` | Dùng lại `ProductSection` với tag `new` |
 | `/onSale` | `OnSale` | Placeholder |
 | `/brands` | `Brands` | Placeholder |
@@ -128,12 +128,12 @@ e-commerce/
 **Dữ liệu hiện tại**
 
 - Nguồn sản phẩm duy nhất là **API Backend**; `constant/masterData.js` không còn chứa sản phẩm (chỉ còn `colorList`, `listFeedback`).
-- Mọi lời gọi API đi qua `src/services/api.js`: `API_BASE_URL` (mặc định `http://localhost:4000`, override bằng `VITE_API_URL`), `resolveImageUrl()`, `getProducts({ tag, limit, skip })`.
+- Mọi lời gọi API đi qua `src/services/api.js`: `API_BASE_URL` (mặc định `http://localhost:4000`, override bằng `VITE_API_URL`), `resolveImageUrl()`, `getProducts({ tag, minPrice, maxPrice, limit, skip })`.
 - Home/NewArrivals/TopSelling: `ProductSection` gọi `getProducts({ tag, limit: 12 })` — server lọc theo tag (`new` / `popular`). Hiển thị **4** sản phẩm đầu; SHOW MORE hiện thêm **8** (tổng **12**) và nút đổi thành SHOW LESS (về 4). Có trạng thái loading và lỗi.
-- Shop: `ProductList` gọi `getProducts({ limit: 9, skip })` — 9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`.
+- Shop: `ProductList` gọi `getProducts({ minPrice, maxPrice, limit: 9, skip })` — 9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`. `minPrice`/`maxPrice` đọc từ URL search params.
 - Cả hai dùng chung `ProductCard`: ảnh lấy từ `thumbnail` của API (`/upload/...`), fallback `TS1.svg`; `variant='default'` cho lưới 4 cột, `variant='shop'` cho lưới 3 cột (ảnh cao 250px, tên clamp 2 dòng).
 - Số cột do component cha quyết định (`grid-template-columns`); `ProductCard` luôn `width: 100%`, không tự đặt kích thước.
-- Filter màu/giá trong `Shop` vẫn là **state cục bộ**, chưa nối vào danh sách sản phẩm.
+- Filter giá trong `Shop` đã nối với URL: slider là controlled component, bấm **Apply Filter** sẽ ghi `minPrice`/`maxPrice` và reset `page=0`; URL là nguồn dữ liệu chính. Filter màu vẫn là state cục bộ, chưa nối vào danh sách sản phẩm.
 - Ảnh thật chỉ có cho `P001`–`P010`; 70 sản phẩm còn lại hiển thị fallback `TS1.svg`.
 
 ---
@@ -149,12 +149,41 @@ server.js
        ├─ /api/v1 → routes/index.js
        │     ├─ GET /health    → { status, uptime, timestamp }
        │     └─ GET /products  → { products, meta, skip }
-       │           ├─ query: limit, skip, tag (tag rỗng = không lọc)
+       │           ├─ query: limit, skip, tag, minPrice, maxPrice
+       │           │         (tag rỗng / giá rỗng = không lọc)
        │           ├─ products[]: id, slug, name, price, rating, description,
        │           │              category, thumbnail, tags[]
-       │           └─ meta: page, limit, total, totalPages (total tính theo tag)
+       │           └─ meta: page, limit, total, totalPages
+       │                     (total tính theo tất cả filter đang áp dụng)
        ├─ notFound             → 404 { error: { code: "ROUTE_NOT_FOUND", ... } }
        └─ errorHandler         → 500/4xx cùng format JSON
+```
+
+> Router được mount tại `/api/v1` trong `app.js`, nên đường dẫn đầy đủ là
+> `GET /api/v1/products`. Gọi `/products` (không có tiền tố) sẽ trả 404.
+
+### Lọc theo giá (`minPrice`, `maxPrice`)
+
+| Param | Kiểu | Mặc định | Mô tả |
+|---|---|---|---|
+| `minPrice` | number ≥ 0 | không lọc | Giá thấp nhất, điều kiện `price >= minPrice` |
+| `maxPrice` | number ≥ 0 | không lọc | Giá cao nhất, điều kiện `price <= maxPrice` |
+
+- So sánh **bao gồm biên**; có thể truyền một hoặc cả hai.
+- `?minPrice=` (rỗng) hoặc chỉ khoảng trắng → coi như không lọc.
+- `minPrice > maxPrice` → `400 INVALID_PRICE_RANGE`.
+- Sai định dạng, số âm, vượt `MAX_PRICE = 5000`, hoặc truyền lặp → `400 INVALID_PRICE_FILTER`.
+- `parsePriceParam` đọc & validate query; `buildProductFilters` dựng `WHERE` + `params`.
+- Câu `COUNT` và `SELECT` dùng chung `whereSql`/`params`, nên `meta.total` luôn khớp dữ liệu đã lọc.
+- Lọc trên `products.price` (đã có index `idx_products_price`), không phải giá trong `product_variants`.
+- Kết hợp được với `tag`, `limit`, `skip`.
+
+```text
+GET /api/v1/products?minPrice=50
+GET /api/v1/products?maxPrice=100&limit=100
+GET /api/v1/products?minPrice=50&maxPrice=100&tag=new
+GET /api/v1/products?minPrice=200&maxPrice=50   → 400 INVALID_PRICE_RANGE
+GET /api/v1/products?minPrice=abc                → 400 INVALID_PRICE_FILTER
 ```
 
 **Database**
@@ -247,10 +276,14 @@ npm run dev            # http://localhost:4000/api/v1
 - [x] Gom mọi lời gọi API vào `client/src/services/api.js` (`API_BASE_URL`, `resolveImageUrl`, `getProducts`)
 - [x] `ProductCard` dùng chung cho `ProductSection` (4 cột) và `ProductList` (3 cột) qua prop `variant`
 - [x] Bỏ mảng `products` khỏi `constant/masterData.js` (chỉ giữ `colorList`, `listFeedback`)
-- [ ] Bổ sung bộ lọc (category, price, color, size) và sort cho `GET /api/v1/products`
+- [x] Lọc theo giá ở server: `?minPrice=&maxPrice=`, validate + `meta.total` theo filter
+- [ ] Bổ sung bộ lọc category, color, size và sort cho `GET /api/v1/products`
 - [ ] Viết API chi tiết sản phẩm: `GET /api/v1/products/:slug` (kèm variants, images, tags)
 - [ ] Thêm `hooks/useProducts.js` để tái sử dụng logic gọi API
-- [ ] Nối filter (giá/màu/size/category) của trang Shop vào query params và đồng bộ lên URL
+- [x] Nối filter giá của trang Shop vào URL: Apply ghi `minPrice`/`maxPrice` và reset `page=0`
+- [ ] Nối filter màu/size/category của trang Shop vào query params và đồng bộ lên URL
+- [ ] Đồng bộ text "Showing ..." và sort với kết quả filter
+- [ ] Trả khoảng giá thực tế (`MIN(price)`/`MAX(price)`) để slider không hard-code `0–250`
 - [ ] Đổi tên `pages/landingPage → pages/Home`, `pages/shop → pages/ProductListing`; chuyển các section (`banner`, `topSelling`, …) vào `components/sections/`
 - [ ] Xóa `components/Pagination` (không dùng) và `App.css`
 - [ ] Bổ sung ảnh cho 70 sản phẩm còn lại (hiện fallback `TS1.svg`)
