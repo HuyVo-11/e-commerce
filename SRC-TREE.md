@@ -133,7 +133,7 @@ e-commerce/
 - Shop: `ProductList` gọi `getProducts({ minPrice, maxPrice, limit: 9, skip })` — 9 sản phẩm/trang, phân trang thu gọn tối đa 7 nút dạng `1 2 3 4 5 ... last` trượt theo `currentPage`. `minPrice`/`maxPrice` đọc từ URL search params.
 - Cả hai dùng chung `ProductCard`: ảnh lấy từ `thumbnail` của API (`/upload/...`), fallback `TS1.svg`; `variant='default'` cho lưới 4 cột, `variant='shop'` cho lưới 3 cột (ảnh cao 250px, tên clamp 2 dòng).
 - Số cột do component cha quyết định (`grid-template-columns`); `ProductCard` luôn `width: 100%`, không tự đặt kích thước.
-- Filter giá trong `Shop` đã nối với URL: slider là controlled component, bấm **Apply Filter** sẽ ghi `minPrice`/`maxPrice` và reset `page=0`; URL là nguồn dữ liệu chính. Filter màu vẫn là state cục bộ, chưa nối vào danh sách sản phẩm.
+- Filter giá trong `Shop` đã nối với URL: slider là controlled component, bấm **Apply Filter** sẽ ghi `minPrice`/`maxPrice` và reset `page=0`; URL là nguồn dữ liệu chính. Nếu URL có `minPrice > maxPrice`, slider sắp xếp lại để không chéo thumb, `ProductList` hiển thị lỗi và **không gọi API**; bấm Apply sẽ ghi lại cặp giá hợp lệ. Filter màu vẫn là state cục bộ, chưa nối vào danh sách sản phẩm.
 - Ảnh thật chỉ có cho `P001`–`P010`; 70 sản phẩm còn lại hiển thị fallback `TS1.svg`.
 
 ---
@@ -281,6 +281,7 @@ npm run dev            # http://localhost:4000/api/v1
 - [ ] Viết API chi tiết sản phẩm: `GET /api/v1/products/:slug` (kèm variants, images, tags)
 - [ ] Thêm `hooks/useProducts.js` để tái sử dụng logic gọi API
 - [x] Nối filter giá của trang Shop vào URL: Apply ghi `minPrice`/`maxPrice` và reset `page=0`
+- [x] Chặn khoảng giá không hợp lệ từ URL (`minPrice > maxPrice`) ở client
 - [ ] Nối filter màu/size/category của trang Shop vào query params và đồng bộ lên URL
 - [ ] Đồng bộ text "Showing ..." và sort với kết quả filter
 - [ ] Trả khoảng giá thực tế (`MIN(price)`/`MAX(price)`) để slider không hard-code `0–250`

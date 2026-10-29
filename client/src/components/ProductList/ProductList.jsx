@@ -53,6 +53,8 @@ const ProductList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const minPrice = parsePriceParam(searchParams.get('minPrice'));
     const maxPrice = parsePriceParam(searchParams.get('maxPrice'));
+    const hasInvalidPriceRange =
+        minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice;
 
     const [totalItems, setTotalItems] = useState(0);
     const [error, setError] = useState(false);
@@ -66,6 +68,8 @@ const ProductList = () => {
     };
 
     useEffect(() => {
+        if (hasInvalidPriceRange) return;
+
         let cancelled = false;
 
         const fetchProducts = async () => {
@@ -96,20 +100,27 @@ const ProductList = () => {
         return () => {
             cancelled = true;
         };
-    }, [currentPage, minPrice, maxPrice]);
+    }, [currentPage, minPrice, maxPrice, hasInvalidPriceRange]);
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return (
         <div className={styles.productListWrapper}>
             <div className={styles.productGrid}>
-                {error && (
+                {hasInvalidPriceRange && (
+                    <p className={styles.state}>
+                        Invalid price range: minPrice ({minPrice}) cannot be greater than maxPrice ({maxPrice}).
+                        Please update the URL or press Apply Filter.
+                    </p>
+                )}
+
+                {!hasInvalidPriceRange && error && (
                     <p className={styles.state}>
                         Unable to load products. Please make sure the API server is running.
                     </p>
                 )}
 
-                {products.map((product) => (
+                {!hasInvalidPriceRange && products.map((product) => (
                     <ProductCard
                         key={product.id}
                         product={product}
@@ -120,7 +131,7 @@ const ProductList = () => {
 
             <div className={styles.divider} />
 
-            {totalPages > 1 && (
+            {!hasInvalidPriceRange && totalPages > 1 && (
                 <div className={styles.paginationWrapper}>
                     <div className={styles.pagination}>
                         <button

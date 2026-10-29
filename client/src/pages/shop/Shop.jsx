@@ -11,7 +11,7 @@ const PRICE_MIN = 0;
 const PRICE_MAX = 250;
 const PRICE_PATTERN = /^\d+(?:\.\d+)?$/;
 
-// Đọc giá từ URL; trả null nếu không truyền hoặc không hợp lệ
+// Đọc giá từ URL; trả null nếu không truyền hoặc không hợp lệ, mục đích là đổi về Number để sử d
 const parsePriceParam = (value) => {
     if (value === null) return null;
 
@@ -56,13 +56,8 @@ const Shop = () => {
         const [minPrice, maxPrice] = priceRange;
         const nextSearchParams = new URLSearchParams(searchParams);
 
-        if (minPrice === PRICE_MIN && maxPrice === PRICE_MAX) {
-            nextSearchParams.delete('minPrice');
-            nextSearchParams.delete('maxPrice');
-        } else {
-            nextSearchParams.set('minPrice', String(minPrice));
-            nextSearchParams.set('maxPrice', String(maxPrice));
-        }
+        nextSearchParams.set('minPrice', String(minPrice));
+        nextSearchParams.set('maxPrice', String(maxPrice));
 
         // Đổi filter phải quay về trang đầu
         nextSearchParams.set('page', '0');
