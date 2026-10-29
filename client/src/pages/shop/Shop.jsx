@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FaSliders } from 'react-icons/fa6';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import styles from './Shop.module.scss';
+import { sizeList } from '../../constant/masterData';
 import PriceFilter from '../../components/PriceFilter/PriceFilter';
 import ProductList from '../../components/ProductList/ProductList';
 
@@ -51,12 +53,39 @@ const Shop = () => {
         setPriceDraft({ key: urlPriceKey, range });
     };
 
+    const urlSize = searchParams.get('size')?.trim() ?? '';
+    const urlSizeValue = sizeList.includes(urlSize) ? urlSize : null;
+    const urlSizeKey = urlSizeValue ?? '';
+
+    const [sizeDraft, setSizeDraft] = useState({
+        key: urlSizeKey,
+        value: urlSizeValue,
+    });
+    const [isSizeOpen, setIsSizeOpen] = useState(true);
+    const selectedSize = sizeDraft.key === urlSizeKey ? sizeDraft.value : urlSizeValue;
+
+    const handleSizeClick = (size) => {
+        setSizeDraft({
+            key: urlSizeKey,
+            value: selectedSize === size ? null : size,
+        });
+    };
+
     const handleApplyFilter = () => {
         const [minPrice, maxPrice] = priceRange;
         const nextSearchParams = new URLSearchParams(searchParams);
 
         nextSearchParams.set('minPrice', String(minPrice));
         nextSearchParams.set('maxPrice', String(maxPrice));
+
+        if (selectedSize) {
+            nextSearchParams.set('size', selectedSize);
+        } else {
+            nextSearchParams.delete('size');
+        }
+
+        // Đồng bộ draft với URL mới để back/forward không khôi phục lựa chọn cũ
+        setSizeDraft({ key: selectedSize ?? '', value: selectedSize });
 
         // Đổi filter phải quay về trang đầu
         nextSearchParams.set('page', '0');
@@ -75,8 +104,8 @@ const Shop = () => {
                     <div className={styles.filterSidebar}>
                         {/* Header Filters */}
                         <div className={styles.filterHeader}>
-                            <h5>Filter</h5>
-                            <FaSliders />
+                            <h2>Filter</h2>
+                            <FaSliders size={24} />
                         </div>
 
                         <div className={styles.divider} />
@@ -120,19 +149,34 @@ const Shop = () => {
                         {/* Kích cỡ (Size) */}
                         <div className={styles.filterSection}>
                             <div className={styles.sectionHeader}>
-                                <h4>Size</h4>
-                                <span className={styles.chevron}>^</span>
+                                <h2>Size</h2>
+                                <button
+                                    type='button'
+                                    className={styles.sectionToggle}
+                                    onClick={() => setIsSizeOpen((prev) => !prev)}
+                                    aria-expanded={isSizeOpen}
+                                    aria-controls='size-options'
+                                >
+                                    {isSizeOpen ? <ChevronUp /> : <ChevronDown />}
+                                </button>
                             </div>
-                            <div className={styles.sizeList}>
-                                <div className={styles.sizeItem}>XX-Small</div>
-                                <div className={styles.sizeItem}>X-Small</div>
-                                <div className={styles.sizeItem}>Small</div>
-                                <div className={styles.sizeItem}>Medium</div>
-                                <div className={styles.sizeItem}>Large</div>
-                                <div className={styles.sizeItem}>X-Large</div>
-                                <div className={styles.sizeItem}>XX-Large</div>
-                                <div className={styles.sizeItem}>3X-Large</div>
-                                <div className={styles.sizeItem}>4X-Large</div>
+                            <div
+                                id='size-options'
+                                className={`${styles.sizeSelection} ${isSizeOpen ? styles.open : ''}`}
+                            >
+                                <div className={styles.sizeList}>
+                                    {sizeList.map((size) => (
+                                        <button
+                                            key={size}
+                                            type='button'
+                                            className={`${styles.sizeItem} ${selectedSize === size ? styles.active : ''}`}
+                                            aria-pressed={selectedSize === size}
+                                            onClick={() => handleSizeClick(size)}
+                                        >
+                                            {size}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -141,7 +185,7 @@ const Shop = () => {
                         {/* Phong cách (Dress Style) */}
                         <div className={styles.filterSection}>
                             <div className={styles.sectionHeader}>
-                                <h4>Dress Style</h4>
+                                <h2>Dress Style</h2>
                                 <span className={styles.chevron}>^</span>
                             </div>
                             <div className={styles.dressStyleList}>

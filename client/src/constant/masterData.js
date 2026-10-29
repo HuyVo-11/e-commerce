@@ -9,6 +9,8 @@ import formal from '../assets/formal.svg'
 import party from '../assets/party.svg'
 import gym from '../assets/gym.svg'
 
+// Giữ khớp với SIZE_VALUES trong server/src/routes/index.js
+export const sizeList = ['X-Small', 'Small', 'Medium', 'Large', 'X-Large'];
 
 export const listFeedback = [
     {

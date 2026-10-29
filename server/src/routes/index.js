@@ -9,6 +9,8 @@ const DEFAULT_LIMIT = 9;
 const MAX_LIMIT = 100;
 const MAX_PRICE = 5000;
 const PRICE_PATTERN = /^\d+(?:\.\d+)?$/; //điều kiện để giá luôn luôn đc format
+const SIZE_VALUES = ['X-Small', 'Small', 'Medium', 'Large', 'X-Large'];
+const SIZE_SET = new Set(SIZE_VALUES);
 
 
 const parsePositiveInt = (value, fallback) => {
@@ -18,6 +20,37 @@ const parsePositiveInt = (value, fallback) => {
 };
 
 const parseTag = (value) => (typeof value === 'string' && value.trim() ? value.trim() : null);
+
+// Mỗi sản phẩm hiện chỉ có một size, nên filter size là so khớp chính xác.
+const parseSizeParam = (query) => {
+    const raw = query.size;
+
+    if (raw === undefined) return null;
+
+    if (typeof raw !== 'string') {
+        throw new ApiError(
+            400,
+            'INVALID_SIZE_FILTER',
+            'size chỉ được truyền một lần',
+            { param: 'size' }
+        );
+    }
+
+    const value = raw.trim();
+
+    if (value === '') return null;
+
+    if (!SIZE_SET.has(value)) {
+        throw new ApiError(
+            400,
+            'INVALID_SIZE_FILTER',
+            'size không hợp lệ',
+            { param: 'size', value, allowed: SIZE_VALUES }
+        );
+    }
+
+    return value;
+};
 
 // lấy giá trị tử query
 const parsePriceParam = (query, name) => {  // query = rep.query, đặt tên biến tuỳ thích
@@ -84,7 +117,7 @@ const parsePriceParam = (query, name) => {  // query = rep.query, đặt tên bi
 };
 
 // nhận các bộ lọc, sử dụng destructing
-const buildProductFilters = ({ tag, minPrice, maxPrice }) => {
+const buildProductFilters = ({ tag, minPrice, maxPrice, size }) => {
 
     //tạo 2 mảng rỗng để lưu giá trị
     const conditions = [];   // condition sẽ lưu các điều kiện sql
@@ -101,6 +134,16 @@ const buildProductFilters = ({ tag, minPrice, maxPrice }) => {
                     WHERE pt.product_id = p.id AND pt.tag = ?
                 )`);
         params.push(tag);
+    }
+
+    // thêm điều kiện size
+    if (size) {
+        conditions.push(`EXISTS (
+                    SELECT 1
+                    FROM product_variants pv
+                    WHERE pv.product_id = p.id AND pv.size = ?
+                )`);
+        params.push(size);
     }
 
     //thêm điều kiện minPrice
@@ -136,6 +179,7 @@ router.get('/products', (req, res, next) => {
         const limit = Math.min(Math.max(parsePositiveInt(req.query.limit, DEFAULT_LIMIT), 1), MAX_LIMIT);
         const skip = parsePositiveInt(req.query.skip, 0);
         const tag = parseTag(req.query.tag);
+        const size = parseSizeParam(req.query);
         const minPrice = parsePriceParam(req.query, 'minPrice');
         const maxPrice = parsePriceParam(req.query, 'maxPrice');
 
@@ -148,7 +192,7 @@ router.get('/products', (req, res, next) => {
             );
         }
 
-        const { whereSql, params } = buildProductFilters({ tag, minPrice, maxPrice });
+        const { whereSql, params } = buildProductFilters({ tag, minPrice, maxPrice, size });
 
         const total = db
             .prepare(`SELECT COUNT(*) AS count FROM products p ${whereSql}`)
@@ -174,7 +218,14 @@ router.get('/products', (req, res, next) => {
                     SELECT group_concat(pt.tag)
                     FROM product_tags pt
                     WHERE pt.product_id = p.id
-                ) AS tags
+                ) AS tags,
+                (
+                    SELECT pv.size
+                    FROM product_variants pv
+                    WHERE pv.product_id = p.id
+                    ORDER BY pv.id ASC
+                    LIMIT 1
+                ) AS size
             FROM products p
             LEFT JOIN categories c ON p.category_id = c.id
             ${whereSql}

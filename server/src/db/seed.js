@@ -21,15 +21,6 @@ const CATEGORY_NAMES = {
     top: 'Tops',
 };
 
-const SIZES_BY_CATEGORY = {
-    pants: ['28', '30', '32', '34'],
-    skirt: ['XS', 'S', 'M', 'L'],
-    dress: ['XS', 'S', 'M', 'L'],
-    activewear: ['S', 'M', 'L'],
-    jacket: ['S', 'M', 'L', 'XL'],
-    default: ['S', 'M', 'L', 'XL'],
-};
-
 const BRANDS = [
     { name: 'Calvin Klein', slug: 'calvin-klein' },
     { name: 'Gucci', slug: 'gucci' },
@@ -153,7 +144,11 @@ const seed = db.transaction(() => {
 
         deleteVariants.run(product.id);
 
-        const sizes = SIZES_BY_CATEGORY[product.category] ?? SIZES_BY_CATEGORY.default;
+        if (!product.size) {
+            throw new Error(`Product ${product.id} thiếu size`);
+        }
+
+        const sizes = Array.isArray(product.size) ? product.size : [product.size];
 
         pickColors(index).forEach((color, colorIndex) => {
             sizes.forEach((size, sizeIndex) => {

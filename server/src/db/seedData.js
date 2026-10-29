@@ -7,6 +7,7 @@ export const products = [
         "name": "Classic White Oxford Shirt",
         "price": 49.99,
         "category": "shirt",
+        "size": "Small",
         "tag": [
             "onSale"
         ],
@@ -18,6 +19,7 @@ export const products = [
         "name": "Slim Fit Black Jeans",
         "price": 69.99,
         "category": "pants",
+        "size": "Medium",
         "tag": [
             "popular"
         ],
@@ -29,6 +31,7 @@ export const products = [
         "name": "Oversized Graphic Tee",
         "price": 29.99,
         "category": "tshirt",
+        "size": "Large",
         "tag": [
             "new",
             "popular"
@@ -41,6 +44,7 @@ export const products = [
         "name": "Floral Summer Dress",
         "price": 59.99,
         "category": "dress",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -52,6 +56,7 @@ export const products = [
         "name": "Wool Blend Blazer",
         "price": 129.99,
         "category": "jacket",
+        "size": "X-Large",
         "tag": [
             "new"
         ],
@@ -63,6 +68,7 @@ export const products = [
         "name": "Cargo Jogger Pants",
         "price": 54.99,
         "category": "pants",
+        "size": "Small",
         "tag": [
             "new",
             "popular"
@@ -75,6 +81,7 @@ export const products = [
         "name": "Ribbed Turtleneck Sweater",
         "price": 79.99,
         "category": "sweater",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -86,6 +93,7 @@ export const products = [
         "name": "Linen Wide-Leg Pants",
         "price": 64.99,
         "category": "pants",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -97,6 +105,7 @@ export const products = [
         "name": "Denim Jacket",
         "price": 89.99,
         "category": "jacket",
+        "size": "X-Small",
         "tag": [
             "new",
             "popular"
@@ -109,6 +118,7 @@ export const products = [
         "name": "Striped Polo Shirt",
         "price": 39.99,
         "category": "shirt",
+        "size": "X-Large",
         "tag": [
             "new"
         ],
@@ -120,6 +130,7 @@ export const products = [
         "name": "A-Line Mini Skirt",
         "price": 34.99,
         "category": "skirt",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -131,6 +142,7 @@ export const products = [
         "name": "Cropped Hoodie",
         "price": 44.99,
         "category": "hoodie",
+        "size": "Medium",
         "tag": [
             "new",
             "popular"
@@ -143,6 +155,7 @@ export const products = [
         "name": "High-Waist Leggings",
         "price": 35.99,
         "category": "activewear",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -154,6 +167,7 @@ export const products = [
         "name": "Satin Slip Dress",
         "price": 74.99,
         "category": "dress",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -165,6 +179,7 @@ export const products = [
         "name": "Puffer Vest",
         "price": 69.99,
         "category": "jacket",
+        "size": "X-Large",
         "tag": [
             "new"
         ],
@@ -176,6 +191,7 @@ export const products = [
         "name": "Tailored Chino Shorts",
         "price": 44.99,
         "category": "shorts",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -187,6 +203,7 @@ export const products = [
         "name": "Knit Cardigan",
         "price": 84.99,
         "category": "sweater",
+        "size": "Medium",
         "tag": [
             "new",
             "popular"
@@ -199,6 +216,7 @@ export const products = [
         "name": "Trench Coat",
         "price": 159.99,
         "category": "jacket",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -210,6 +228,7 @@ export const products = [
         "name": "Wrap Midi Dress",
         "price": 67.99,
         "category": "dress",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -221,6 +240,7 @@ export const products = [
         "name": "Tech Fleece Sweatpants",
         "price": 59.99,
         "category": "pants",
+        "size": "X-Large",
         "tag": [
             "new",
             "popular"
@@ -233,6 +253,7 @@ export const products = [
         "name": "Cropped Leather Jacket",
         "price": 199.99,
         "category": "jacket",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -244,6 +265,7 @@ export const products = [
         "name": "Pleated Midi Skirt",
         "price": 49.99,
         "category": "skirt",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -255,6 +277,7 @@ export const products = [
         "name": "Relaxed Fit Linen Shirt",
         "price": 54.99,
         "category": "shirt",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -266,6 +289,7 @@ export const products = [
         "name": "Sports Crop Top",
         "price": 24.99,
         "category": "activewear",
+        "size": "X-Small",
         "tag": [
             "new",
             "popular"
@@ -278,6 +302,7 @@ export const products = [
         "name": "Straight-Cut Jeans",
         "price": 74.99,
         "category": "pants",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -289,6 +314,7 @@ export const products = [
         "name": "Crewneck Sweatshirt",
         "price": 49.99,
         "category": "hoodie",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -300,6 +326,7 @@ export const products = [
         "name": "Maxi Boho Dress",
         "price": 79.99,
         "category": "dress",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -311,6 +338,7 @@ export const products = [
         "name": "Zip-Up Track Jacket",
         "price": 64.99,
         "category": "jacket",
+        "size": "Large",
         "tag": [
             "new",
             "popular"
@@ -323,6 +351,7 @@ export const products = [
         "name": "Bodycon Tube Top",
         "price": 22.99,
         "category": "top",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -334,6 +363,7 @@ export const products = [
         "name": "Formal Dress Trousers",
         "price": 89.99,
         "category": "pants",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -345,6 +375,7 @@ export const products = [
         "name": "Vintage Washed Denim Jacket",
         "price": 89.99,
         "category": "jacket",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -356,6 +387,7 @@ export const products = [
         "name": "Striped Linen Camp Collar Shirt",
         "price": 44.99,
         "category": "shirt",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -367,6 +399,7 @@ export const products = [
         "name": "Heavyweight Boxy Fit Tee",
         "price": 34.99,
         "category": "tshirt",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -378,6 +411,7 @@ export const products = [
         "name": "Pleated Chino Shorts",
         "price": 39.99,
         "category": "shorts",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -389,6 +423,7 @@ export const products = [
         "name": "Ribbed Knit Turtleneck Sweater",
         "price": 69.99,
         "category": "sweater",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -400,6 +435,7 @@ export const products = [
         "name": "French Terry Fleece Hoodie",
         "price": 59.99,
         "category": "hoodie",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -411,6 +447,7 @@ export const products = [
         "name": "High-Waisted Wide Leg Trousers",
         "price": 74.99,
         "category": "pants",
+        "size": "Medium",
         "tag": [
             "new",
             "popular"
@@ -423,6 +460,7 @@ export const products = [
         "name": "Satin Slip Midi Dress",
         "price": 64.99,
         "category": "dress",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -434,6 +472,7 @@ export const products = [
         "name": "Athletic Compression Leggings",
         "price": 48.99,
         "category": "activewear",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -445,10 +484,11 @@ export const products = [
         "name": "A-Line Denim Mini Skirt",
         "price": 42.99,
         "category": "skirt",
+        "size": "X-Large",
         "tag": [
             "new"
         ],
-        "rating": 4.0,
+        "rating": 4,
         "description": "Timeless A-line mini skirt crafted from authentic rigid cotton denim."
     },
     {
@@ -456,6 +496,7 @@ export const products = [
         "name": "Classic Crewneck Sweatshirt",
         "price": 52.99,
         "category": "sweater",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -467,6 +508,7 @@ export const products = [
         "name": "Floral Print Wrap Dress",
         "price": 68.99,
         "category": "dress",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -478,6 +520,7 @@ export const products = [
         "name": "Cargo Utility Pants",
         "price": 64.99,
         "category": "pants",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -489,6 +532,7 @@ export const products = [
         "name": "Graphic Skate Hoodie",
         "price": 62.99,
         "category": "hoodie",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -500,6 +544,7 @@ export const products = [
         "name": "Pique Cotton Polo Shirt",
         "price": 38.99,
         "category": "shirt",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -511,6 +556,7 @@ export const products = [
         "name": "Seamless Ribbed Crop Top",
         "price": 26.99,
         "category": "top",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -522,6 +568,7 @@ export const products = [
         "name": "Faux Shearling Moto Jacket",
         "price": 149.99,
         "category": "jacket",
+        "size": "Medium",
         "tag": [
             "popular"
         ],
@@ -533,6 +580,7 @@ export const products = [
         "name": "Corduroy Straight Leg Pants",
         "price": 58.99,
         "category": "pants",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -544,6 +592,7 @@ export const products = [
         "name": "Performance Running Shorts",
         "price": 32.99,
         "category": "activewear",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -555,6 +604,7 @@ export const products = [
         "name": "Cable Knit Cardigan",
         "price": 79.99,
         "category": "sweater",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -566,6 +616,7 @@ export const products = [
         "name": "Tie-Dye Oversized T-Shirt",
         "price": 31.99,
         "category": "tshirt",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -577,6 +628,7 @@ export const products = [
         "name": "Tailored Single-Breasted Blazer",
         "price": 129.99,
         "category": "jacket",
+        "size": "Medium",
         "tag": [
             "popular"
         ],
@@ -588,6 +640,7 @@ export const products = [
         "name": "Tiered Ruffle Summer Skirt",
         "price": 46.99,
         "category": "skirt",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -599,6 +652,7 @@ export const products = [
         "name": "Fleece Zip-Through Vest",
         "price": 54.99,
         "category": "jacket",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -610,6 +664,7 @@ export const products = [
         "name": "Raw Hem Denim Cutoffs",
         "price": 36.99,
         "category": "shorts",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -621,6 +676,7 @@ export const products = [
         "name": "Modal Blend Henley Shirt",
         "price": 37.99,
         "category": "shirt",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -632,6 +688,7 @@ export const products = [
         "name": "High-Waist Biker Shorts",
         "price": 27.99,
         "category": "activewear",
+        "size": "Medium",
         "tag": [
             "popular"
         ],
@@ -643,10 +700,11 @@ export const products = [
         "name": "Knitted Halter Neck Top",
         "price": 29.99,
         "category": "top",
+        "size": "Large",
         "tag": [
             "new"
         ],
-        "rating": 4.0,
+        "rating": 4,
         "description": "Chic knitted halter top with an open back and ribbed texture."
     },
     {
@@ -654,6 +712,7 @@ export const products = [
         "name": "Relaxed Drawstring Linen Pants",
         "price": 56.99,
         "category": "pants",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -665,6 +724,7 @@ export const products = [
         "name": "Puffer Down Winter Coat",
         "price": 179.99,
         "category": "jacket",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -676,6 +736,7 @@ export const products = [
         "name": "Button-Front Denim Pinafore",
         "price": 59.99,
         "category": "dress",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -687,6 +748,7 @@ export const products = [
         "name": "Slub Cotton Pocket Tee",
         "price": 24.99,
         "category": "tshirt",
+        "size": "Medium",
         "tag": [
             "popular"
         ],
@@ -698,6 +760,7 @@ export const products = [
         "name": "Cropped Zip Workout Jacket",
         "price": 49.99,
         "category": "activewear",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -709,6 +772,7 @@ export const products = [
         "name": "Chunky Waffle Knit Beanie Sweater",
         "price": 66.99,
         "category": "sweater",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -720,6 +784,7 @@ export const products = [
         "name": "Asymmetrical Wrap Midi Skirt",
         "price": 51.99,
         "category": "skirt",
+        "size": "X-Large",
         "tag": [
             "new"
         ],
@@ -731,6 +796,7 @@ export const products = [
         "name": "Vintage Acid Wash Pullover Hoodie",
         "price": 65.99,
         "category": "hoodie",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -742,6 +808,7 @@ export const products = [
         "name": "Minimalist Poplin Dress Shirt",
         "price": 49.99,
         "category": "shirt",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -753,6 +820,7 @@ export const products = [
         "name": "Distressed Skinny Fit Jeans",
         "price": 69.99,
         "category": "pants",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -764,10 +832,11 @@ export const products = [
         "name": "Lace Trim Cami Top",
         "price": 25.99,
         "category": "top",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
-        "rating": 4.0,
+        "rating": 4,
         "description": "Delicate camisole top accented with floral eyelash lace along the V-neckline."
     },
     {
@@ -775,6 +844,7 @@ export const products = [
         "name": "Faux Leather Trench Coat",
         "price": 159.99,
         "category": "jacket",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -786,6 +856,7 @@ export const products = [
         "name": "Smocked Bodice Sundress",
         "price": 62.99,
         "category": "dress",
+        "size": "Small",
         "tag": [
             "new"
         ],
@@ -797,6 +868,7 @@ export const products = [
         "name": "Mesh Panel Training Tank",
         "price": 28.99,
         "category": "activewear",
+        "size": "Medium",
         "tag": [
             "new"
         ],
@@ -808,6 +880,7 @@ export const products = [
         "name": "Striped Half-Zip Knit Pullover",
         "price": 72.99,
         "category": "sweater",
+        "size": "Large",
         "tag": [
             "popular"
         ],
@@ -819,6 +892,7 @@ export const products = [
         "name": "Elastic Waist Cargo Shorts",
         "price": 41.99,
         "category": "shorts",
+        "size": "X-Small",
         "tag": [
             "new"
         ],
@@ -830,6 +904,7 @@ export const products = [
         "name": "Retro Graphic Ringer Tee",
         "price": 29.99,
         "category": "tshirt",
+        "size": "X-Large",
         "tag": [
             "popular"
         ],
@@ -841,6 +916,7 @@ export const products = [
         "name": "Checkered Flannel Button-Up",
         "price": 47.99,
         "category": "shirt",
+        "size": "Small",
         "tag": [
             "popular"
         ],
@@ -852,6 +928,7 @@ export const products = [
         "name": "Pleated Tennis Mini Skirt",
         "price": 38.99,
         "category": "skirt",
+        "size": "Medium",
         "tag": [
             "new",
             "popular"
@@ -864,6 +941,7 @@ export const products = [
         "name": "Oversized Thermal Knit Long Sleeve",
         "price": 36.99,
         "category": "top",
+        "size": "Large",
         "tag": [
             "new"
         ],
@@ -875,6 +953,7 @@ export const products = [
         "name": "Fleece Lined Jogger Pants",
         "price": 54.99,
         "category": "pants",
+        "size": "X-Small",
         "tag": [
             "popular"
         ],
@@ -886,6 +965,7 @@ export const products = [
         "name": "Cropped Denim Vest",
         "price": 45.99,
         "category": "jacket",
+        "size": "X-Large",
         "tag": [
             "new"
         ],

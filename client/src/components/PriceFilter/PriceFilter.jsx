@@ -19,7 +19,7 @@ const PriceFilter = ({ value, onChange, min = 0, max = 250 }) => {
     return (
         <div className={styles.priceFillterWrapper}>
             <div className={styles.priceFillterHeader}>
-                <h5>Price</h5>
+                <h2>Price</h2>
                 <button
                     className={styles.priceFillterBtn}
                     onClick={() => setIsOpen(!isOpen)}
