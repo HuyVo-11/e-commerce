@@ -35,6 +35,8 @@ const getPaginationGroup = (currentPage, totalPages) => {
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
 };
 
+
+
 const ProductList = ({ filters, errors = {}, isValid = true }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const rawPage = Number.parseInt(searchParams.get('page') ?? '1', 10);
@@ -44,7 +46,6 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
         nextSearchParams.set('page', String(page));
         setSearchParams(nextSearchParams);
     };
-
     const { products, meta, error } = useProducts({
         filters,
         page: currentPage,
@@ -54,25 +55,31 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
     const totalItems = meta?.total ?? 0;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+    const from = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+    const to = Math.min(currentPage * itemsPerPage, totalItems);
     return (
         <div className={styles.productListWrapper}>
+            {isValid && totalItems > 0 && (
+                <p className={styles.productCount}>
+                    Showing {from}–{to} of {totalItems} Products
+                </p>
+            )}
             <div className={styles.productGrid}>
                 {errors.price && (
                     <p className={styles.state}>
-                        Invalid price range: minPrice ({errors.price.min}) cannot be greater than maxPrice ({errors.price.max}).
-                        Please update the URL or press Apply Filter.
+                        Invalid price range.
                     </p>
                 )}
 
                 {errors.sizes && (
                     <p className={styles.state}>
-                        Invalid size(s): {errors.sizes.invalid.join(', ')}. Allowed sizes: {errors.sizes.allowed.join(', ')}.
+                        Invalid size.
                     </p>
                 )}
 
                 {isValid && error && (
                     <p className={styles.state}>
-                        Unable to load products. Please make sure the API server is running.
+                        Unable to load products.
                     </p>
                 )}
 
@@ -134,4 +141,7 @@ const ProductList = ({ filters, errors = {}, isValid = true }) => {
     );
 };
 
+
 export default ProductList;
+
+

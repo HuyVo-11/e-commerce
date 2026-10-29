@@ -68,7 +68,7 @@ const Shop = () => {
                             </div>
                         </div>
 
-                        {/* Khoảng giá (Price) */}
+                        {/* Price */}
                         <div className={styles.filterSection}>
                             <PriceFilter
                                 value={priceRange}
@@ -80,7 +80,7 @@ const Shop = () => {
 
                         <div className={styles.divider} />
 
-                        {/* Kích cỡ (Size) */}
+                        {/* Size */}
                         <div className={styles.filterSection}>
                             <div className={styles.sectionHeader}>
                                 <h5>Size</h5>
@@ -160,7 +160,6 @@ const Shop = () => {
                         <div className={styles.contentHeader}>
                             <h4 className={styles.title}>Casual</h4>
                             <div className={styles.sortWrapper}>
-                                <span className={styles.productCount}>Showing 1-10 of 100 Products</span>
                                 <div className={styles.sortBy}>
                                     <span>Sort by:</span>
                                     <span className={styles.selectedSort}>Most Popular</span>
