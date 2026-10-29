@@ -4,7 +4,7 @@ import { getProducts } from '../services/api';
 
 const EMPTY_SIZES = [];
 
-const useProducts = ({ filters, page = 0, limit = 9, enabled = true } = {}) => {
+const useProducts = ({ filters, page = 1, limit = 9, enabled = true } = {}) => {
     const [products, setProducts] = useState([]);
     const [meta, setMeta] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ const useProducts = ({ filters, page = 0, limit = 9, enabled = true } = {}) => {
                     maxPrice,
                     size: sizes.length > 0 ? sizes : undefined,
                     limit,
-                    skip: page * limit,
+                    skip: (page - 1) * limit,
                     signal: controller.signal,
                 });
 

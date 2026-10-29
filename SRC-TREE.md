@@ -137,8 +137,8 @@ e-commerce/
 - Cả hai dùng chung `ProductCard`: ảnh lấy từ `thumbnail` của API (`/upload/...`), fallback `TS1.svg`; `variant='default'` cho lưới 4 cột, `variant='shop'` cho lưới 3 cột (ảnh cao 250px, tên clamp 2 dòng).
 - Số cột do component cha quyết định (`grid-template-columns`); `ProductCard` luôn `width: 100%`, không tự đặt kích thước.
 - Logic filter giá/size được tách theo trách nhiệm: `useProductFilters` (URL, normalize, validation, Apply/Clear), `useFilterDraft` (draft giá/size cho Apply), `useProducts` (fetch + AbortController), `useDisclosure` (đóng/mở UI). `Shop` ghép các hook và truyền `filters`/`errors`/`isValid` xuống `ProductList`.
-- Filter giá đã nối với URL: slider là controlled component, bấm **Apply Filter** sẽ ghi `minPrice`/`maxPrice` và reset `page=0`; URL là nguồn dữ liệu chính. Nếu URL có `minPrice > maxPrice`, slider sắp xếp lại để không chéo thumb, `ProductList` hiển thị lỗi và **không gọi API**; bấm Apply sẽ ghi lại cặp giá hợp lệ.
-- Filter size: 5 lựa chọn lấy từ `sizeList` (`X-Small`, `Small`, `Medium`, `Large`, `X-Large`), cho phép chọn nhiều size; bấm lại để bỏ chọn. Bấm **Apply Filter** ghi nhiều param `size` vào URL và reset `page=0`; URL có size không hợp lệ thì `ProductList` báo lỗi và **không gọi API**.
+- Filter giá đã nối với URL: slider là controlled component, bấm **Apply Filter** sẽ ghi `minPrice`/`maxPrice` và reset `page=1`; URL là nguồn dữ liệu chính. Nếu URL có `minPrice > maxPrice`, slider sắp xếp lại để không chéo thumb, `ProductList` hiển thị lỗi và **không gọi API**; bấm Apply sẽ ghi lại cặp giá hợp lệ.
+- Filter size: 5 lựa chọn lấy từ `sizeList` (`X-Small`, `Small`, `Medium`, `Large`, `X-Large`), cho phép chọn nhiều size; bấm lại để bỏ chọn. Bấm **Apply Filter** ghi nhiều param `size` vào URL và reset `page=1`; URL có size không hợp lệ thì `ProductList` báo lỗi và **không gọi API**.
 - Ảnh thật chỉ có cho `P001`–`P010`; 70 sản phẩm còn lại hiển thị fallback `TS1.svg`.
 
 ---
@@ -306,7 +306,7 @@ npm run dev            # http://localhost:4000/api/v1
 - [ ] Bổ sung bộ lọc category và sort cho `GET /api/v1/products`
 - [ ] Viết API chi tiết sản phẩm: `GET /api/v1/products/:slug` (kèm variants, images, tags)
 - [x] Thêm `hooks/useProducts.js` để tái sử dụng logic gọi API
-- [x] Nối filter giá của trang Shop vào URL: Apply ghi `minPrice`/`maxPrice` và reset `page=0`
+- [x] Nối filter giá của trang Shop vào URL: Apply ghi `minPrice`/`maxPrice` và reset `page=1`
 - [x] Chặn khoảng giá không hợp lệ từ URL (`minPrice > maxPrice`) ở client
 - [x] Nối filter size của trang Shop vào query params và đồng bộ lên URL
 - [ ] Nối filter category của trang Shop vào query params và đồng bộ lên URL
