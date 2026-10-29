@@ -11,17 +11,26 @@ export const resolveImageUrl = (url) => {
     return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
-const request = async (path, params = {}) => {
+const request = async (path, params = {}, { signal } = {}) => {
     const search = new URLSearchParams();
 
     Object.entries(params).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((item) => {
+                if (item !== undefined && item !== null && item !== '') {
+                    search.append(key, String(item));
+                }
+            });
+            return;
+        }
+
         if (value !== undefined && value !== null && value !== '') {
             search.set(key, String(value));
         }
     });
 
     const query = search.toString();
-    const response = await fetch(`${API_BASE_URL}${path}${query ? `?${query}` : ''}`);
+    const response = await fetch(`${API_BASE_URL}${path}${query ? `?${query}` : ''}`, { signal });
 
     if (!response.ok) {
         throw new Error(`GET ${path} thất bại (HTTP ${response.status})`);
@@ -30,7 +39,15 @@ const request = async (path, params = {}) => {
     return response.json();
 };
 
-// GET /api/v1/products?tag=&minPrice=&maxPrice=&size=&limit=&skip=
+// GET /api/v1/products?tag=&minPrice=&maxPrice=&size=&size=&limit=&skip=
 // Trả về { products: [{ ...product, tags: string[] }], meta, skip }
-export const getProducts = ({ tag, minPrice, maxPrice, size, limit = 9, skip = 0 } = {}) =>
-    request('/api/v1/products', { tag, minPrice, maxPrice, size, limit, skip });
+export const getProducts = ({
+    tag,
+    minPrice,
+    maxPrice,
+    size,
+    limit = 9,
+    skip = 0,
+    signal,
+} = {}) =>
+    request('/api/v1/products', { tag, minPrice, maxPrice, size, limit, skip }, { signal });

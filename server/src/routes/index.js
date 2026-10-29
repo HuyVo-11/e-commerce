@@ -21,35 +21,42 @@ const parsePositiveInt = (value, fallback) => {
 
 const parseTag = (value) => (typeof value === 'string' && value.trim() ? value.trim() : null);
 
-// Mỗi sản phẩm hiện chỉ có một size, nên filter size là so khớp chính xác.
-const parseSizeParam = (query) => {
+// Filter size hỗ trợ nhiều giá trị: ?size=Small&size=Large
+const parseSizeParams = (query) => {
     const raw = query.size;
 
-    if (raw === undefined) return null;
+    if (raw === undefined) return [];
 
-    if (typeof raw !== 'string') {
-        throw new ApiError(
-            400,
-            'INVALID_SIZE_FILTER',
-            'size chỉ được truyền một lần',
-            { param: 'size' }
-        );
-    }
+    const values = Array.isArray(raw) ? raw : [raw];
+    const sizes = [];
 
-    const value = raw.trim();
+    values.forEach((value) => {
+        if (typeof value !== 'string') {
+            throw new ApiError(
+                400,
+                'INVALID_SIZE_FILTER',
+                'size không hợp lệ',
+                { param: 'size' }
+            );
+        }
 
-    if (value === '') return null;
+        const trimmed = value.trim();
 
-    if (!SIZE_SET.has(value)) {
-        throw new ApiError(
-            400,
-            'INVALID_SIZE_FILTER',
-            'size không hợp lệ',
-            { param: 'size', value, allowed: SIZE_VALUES }
-        );
-    }
+        if (trimmed === '') return;
 
-    return value;
+        if (!SIZE_SET.has(trimmed)) {
+            throw new ApiError(
+                400,
+                'INVALID_SIZE_FILTER',
+                'size không hợp lệ',
+                { param: 'size', value: trimmed, allowed: SIZE_VALUES }
+            );
+        }
+
+        if (!sizes.includes(trimmed)) sizes.push(trimmed);
+    });
+
+    return sizes;
 };
 
 // lấy giá trị tử query
@@ -117,7 +124,7 @@ const parsePriceParam = (query, name) => {  // query = rep.query, đặt tên bi
 };
 
 // nhận các bộ lọc, sử dụng destructing
-const buildProductFilters = ({ tag, minPrice, maxPrice, size }) => {
+const buildProductFilters = ({ tag, minPrice, maxPrice, sizes = [] }) => {
 
     //tạo 2 mảng rỗng để lưu giá trị
     const conditions = [];   // condition sẽ lưu các điều kiện sql
@@ -136,14 +143,16 @@ const buildProductFilters = ({ tag, minPrice, maxPrice, size }) => {
         params.push(tag);
     }
 
-    // thêm điều kiện size
-    if (size) {
+    // thêm điều kiện size (một hoặc nhiều)
+    if (sizes.length > 0) {
+        const placeholders = sizes.map(() => '?').join(', ');
+
         conditions.push(`EXISTS (
                     SELECT 1
                     FROM product_variants pv
-                    WHERE pv.product_id = p.id AND pv.size = ?
+                    WHERE pv.product_id = p.id AND pv.size IN (${placeholders})
                 )`);
-        params.push(size);
+        params.push(...sizes);
     }
 
     //thêm điều kiện minPrice
@@ -179,7 +188,7 @@ router.get('/products', (req, res, next) => {
         const limit = Math.min(Math.max(parsePositiveInt(req.query.limit, DEFAULT_LIMIT), 1), MAX_LIMIT);
         const skip = parsePositiveInt(req.query.skip, 0);
         const tag = parseTag(req.query.tag);
-        const size = parseSizeParam(req.query);
+        const sizes = parseSizeParams(req.query);
         const minPrice = parsePriceParam(req.query, 'minPrice');
         const maxPrice = parsePriceParam(req.query, 'maxPrice');
 
@@ -192,7 +201,7 @@ router.get('/products', (req, res, next) => {
             );
         }
 
-        const { whereSql, params } = buildProductFilters({ tag, minPrice, maxPrice, size });
+        const { whereSql, params } = buildProductFilters({ tag, minPrice, maxPrice, sizes });
 
         const total = db
             .prepare(`SELECT COUNT(*) AS count FROM products p ${whereSql}`)

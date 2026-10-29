@@ -1,25 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import ProductCard from '../ProductCard/ProductCard.jsx';
-import { sizeList } from '../../constant/masterData';
-import { getProducts } from '../../services/api';
+import useProducts from '../../hooks/useProducts';
 import styles from './ProductList.module.scss';
 
 const itemsPerPage = 9;
 const MAX_PAGE_BUTTONS = 7;
-const PRICE_PATTERN = /^\d+(?:\.\d+)?$/;
-
-// Bỏ qua giá không hợp lệ để tránh gọi API lỗi
-const parsePriceParam = (value) => {
-    if (value === null) return undefined;
-
-    const trimmed = value.trim();
-
-    if (!PRICE_PATTERN.test(trimmed)) return undefined;
-
-    return Number(trimmed);
-};
 
 // Trả về danh sách index trang (0-based) cần hiển thị, luôn chứa currentPage
 const getPaginationGroup = (currentPage, totalPages) => {
@@ -49,23 +35,8 @@ const getPaginationGroup = (currentPage, totalPages) => {
     return [0, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages - 1];
 };
 
-const ProductList = () => {
-    const [products, setProducts] = useState([]);
+const ProductList = ({ filters, errors = {}, isValid = true }) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const minPrice = parsePriceParam(searchParams.get('minPrice'));
-    const maxPrice = parsePriceParam(searchParams.get('maxPrice'));
-    const hasInvalidPriceRange =
-        minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice;
-
-    const sizeParam = searchParams.get('size');
-    const sizeValue = sizeParam?.trim() ?? '';
-    const size = sizeList.includes(sizeValue) ? sizeValue : undefined;
-    const hasInvalidSize = sizeValue !== '' && !size;
-    const hasInvalidFilter = hasInvalidPriceRange || hasInvalidSize;
-
-    const [totalItems, setTotalItems] = useState(0);
-    const [error, setError] = useState(false);
-
     const rawPage = Number.parseInt(searchParams.get('page') ?? '0', 10);
     const currentPage = Number.isInteger(rawPage) && rawPage >= 0 ? rawPage : 0;
     const goToPage = (page) => {
@@ -74,67 +45,38 @@ const ProductList = () => {
         setSearchParams(nextSearchParams);
     };
 
-    useEffect(() => {
-        if (hasInvalidFilter) return;
-
-        let cancelled = false;
-
-        const fetchProducts = async () => {
-            try {
-                const data = await getProducts({
-                    minPrice,
-                    maxPrice,
-                    size,
-                    limit: itemsPerPage,
-                    skip: currentPage * itemsPerPage,
-                });
-
-                if (cancelled) return;
-
-                setProducts(data.products ?? []);
-                setTotalItems(data.meta?.total ?? 0);
-                setError(false);
-            } catch {
-                if (cancelled) return;
-
-                setProducts([]);
-                setTotalItems(0);
-                setError(true);
-            }
-        };
-
-        fetchProducts();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [currentPage, minPrice, maxPrice, size, hasInvalidFilter]);
-
+    const { products, meta, error } = useProducts({
+        filters,
+        page: currentPage,
+        limit: itemsPerPage,
+        enabled: isValid,
+    });
+    const totalItems = meta?.total ?? 0;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return (
         <div className={styles.productListWrapper}>
             <div className={styles.productGrid}>
-                {hasInvalidPriceRange && (
+                {errors.price && (
                     <p className={styles.state}>
-                        Invalid price range: minPrice ({minPrice}) cannot be greater than maxPrice ({maxPrice}).
+                        Invalid price range: minPrice ({errors.price.min}) cannot be greater than maxPrice ({errors.price.max}).
                         Please update the URL or press Apply Filter.
                     </p>
                 )}
 
-                {hasInvalidSize && (
+                {errors.sizes && (
                     <p className={styles.state}>
-                        Invalid size: {sizeParam}. Allowed sizes: {sizeList.join(', ')}.
+                        Invalid size(s): {errors.sizes.invalid.join(', ')}. Allowed sizes: {errors.sizes.allowed.join(', ')}.
                     </p>
                 )}
 
-                {!hasInvalidFilter && error && (
+                {isValid && error && (
                     <p className={styles.state}>
                         Unable to load products. Please make sure the API server is running.
                     </p>
                 )}
 
-                {!hasInvalidFilter && products.map((product) => (
+                {isValid && products.map((product) => (
                     <ProductCard
                         key={product.id}
                         product={product}
@@ -145,7 +87,7 @@ const ProductList = () => {
 
             <div className={styles.divider} />
 
-            {!hasInvalidFilter && totalPages > 1 && (
+            {isValid && totalPages > 1 && (
                 <div className={styles.paginationWrapper}>
                     <div className={styles.pagination}>
                         <button
